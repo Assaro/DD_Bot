@@ -26,7 +26,10 @@ var configuration = new ConfigurationBuilder()
 var serviceProvider = new ServiceCollection()
     .AddScoped(_ => configuration)
     .AddSingleton<IDiscordService, DiscordService>()
+    .AddSingleton<IDockerService, DockerService>()
     .BuildServiceProvider();
 
+var _dockerService = serviceProvider.GetRequiredService<IDockerService>() as DockerService;
 var _discordBot = serviceProvider.GetRequiredService<IDiscordService>() as DiscordService;
 _discordBot.Start();
+_dockerService.Start();
