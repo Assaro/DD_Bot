@@ -21,7 +21,6 @@ namespace DD_Bot.Application.Commands
                 Name = "list",
                 Description = " List all Docker containers"
             };
-
             return builder.Build();
         }
 
@@ -29,9 +28,7 @@ namespace DD_Bot.Application.Commands
         {
             await arg.RespondAsync("Contacting Docker Service...");
 
-
-
-
+            return;
         }
 
     }

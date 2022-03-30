@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DD_Bot.Application.Commands;
 using DD_Bot.Application.Interfaces;
-using DD_Bot.Application.Services;
 using DD_Bot.Domain;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;

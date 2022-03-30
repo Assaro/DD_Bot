@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DD_Bot.Application.Interfaces;
-using DD_Bot.Application.Providers;
 using DD_Bot.Domain;
 using Microsoft.Extensions.Configuration;
 using Renci.SshNet;
@@ -14,24 +13,25 @@ namespace DD_Bot.Application.Services
     public class DockerService : IDockerService
     {
         private IConfigurationRoot Configuration;
+        public Timer UpdateTimer;
+        public Dictionary<string, bool> DockerStatus { get; }
+        private readonly string updateCommand = "docker ps -a --format \"{{.Names}}\\t{{.State}}\"";
+        public SshSettings Setting => Configuration.Get<Settings>().SshSettings;
+
 
         public DockerService(IConfigurationRoot configuration)
         {
             Configuration = configuration;
             DockerStatus = new Dictionary<string, bool>();
+#pragma warning disable CS4014 // Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
+            UpdateTimer.Elapsed += (s, e) => DockerUpdate();
             DockerUpdate();
             UpdateTimer = new Timer();
-            UpdateTimer.Elapsed += (s, e) => DockerUpdate();
+#pragma warning restore CS4014 // Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
             UpdateTimer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
             UpdateTimer.AutoReset = true;
             UpdateTimer.Start();
         }
-        public SshSettings Setting => Configuration.Get<Settings>().SshSettings;
-
-        private readonly string updateCommand = "docker ps -a --format \"{{.Names}}\\t{{.State}}\"";
-        public Dictionary<string, bool> DockerStatus { get; }
-
-        public Timer UpdateTimer;
 
         public string[] RunningDockers => DockerStatus.Where(docker => docker.Value).Select(pairs=>pairs.Key).ToArray();
         public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Value).Select(pairs => pairs.Key).ToArray();
@@ -47,11 +47,10 @@ namespace DD_Bot.Application.Services
             }
 
             DictionaryUpdate(result);
-
             Console.WriteLine("Updated Status");
             return;
-
         }
+
         public void DictionaryUpdate(string sshData) 
         {
             string[] lines = sshData.Split('\n');
@@ -89,11 +88,8 @@ namespace DD_Bot.Application.Services
             Console.WriteLine("DockerService startet");
         }
 
-
         public async Task DockerCommand(string commandName, string dockerName)
         {
-
-
             using( var client = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword))
             {
                 client.Connect();
@@ -101,8 +97,6 @@ namespace DD_Bot.Application.Services
                 client.Disconnect();
             }
             return;
-
         }
-
     }
 }

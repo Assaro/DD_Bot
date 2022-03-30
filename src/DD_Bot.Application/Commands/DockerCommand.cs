@@ -38,13 +38,11 @@ namespace DD_Bot.Application.Commands
                         Name = "start",
                         Value ="start",
                     },
-
                     new ApplicationCommandOptionChoiceProperties()
                     {
                         Name = "stop",
                         Value ="stop",
                     },
-
                     new ApplicationCommandOptionChoiceProperties()
                     {
                         Name = "restart",
