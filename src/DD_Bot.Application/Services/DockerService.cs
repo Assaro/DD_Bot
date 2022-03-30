@@ -22,7 +22,7 @@ namespace DD_Bot.Application.Services
             DockerUpdate();
             UpdateTimer = new Timer();
             UpdateTimer.Elapsed += (s, e) => DockerUpdate();
-            UpdateTimer.Interval = TimeSpan.FromSeconds(30).TotalMilliseconds;
+            UpdateTimer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
             UpdateTimer.AutoReset = true;
             UpdateTimer.Start();
         }
@@ -48,7 +48,7 @@ namespace DD_Bot.Application.Services
 
             DictionaryUpdate(result);
 
-            Console.WriteLine("Updated");
+            Console.WriteLine("Updated Status");
             return;
 
         }
