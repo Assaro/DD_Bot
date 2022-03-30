@@ -19,7 +19,7 @@ namespace DD_Bot.Application.Commands
             var builder = new SlashCommandBuilder()
             {
                 Name = "docker",
-                Description = "Issue a command to a docker"     
+                Description = "Issue a command to docker"     
             };
 
             builder.AddOption("dockername",
@@ -132,5 +132,4 @@ namespace DD_Bot.Application.Commands
             }
         }
     }
-
 }
