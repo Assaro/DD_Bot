@@ -23,8 +23,6 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("Settings.json", false ,true)
     .Build();
 
-SettingsProvider.SetConfiguration(configuration);
-
 var serviceProvider = new ServiceCollection()
     .AddScoped(_ => configuration)
     .AddSingleton<IDiscordService, DiscordService>()

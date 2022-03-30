@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DD_Bot.Application.Commands;
 using DD_Bot.Application.Interfaces;
 using DD_Bot.Application.Providers;
+using DD_Bot.Domain;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 
@@ -23,13 +21,15 @@ namespace DD_Bot.Application.Services
             DiscordClient = new DiscordSocketClient();
         }
 
+        public DiscordSettings Setting => Configuration.Get<Settings>().DiscordSettings;
+
         public void Start()
         {
             DiscordClient.Log += DiscordClient_Log;
             DiscordClient.MessageReceived += DiscordClient_MessageReceived;
             DiscordClient.GuildAvailable += DiscordClient_GuildAvailable;
             DiscordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
-            DiscordClient.LoginAsync(Discord.TokenType.Bot, SettingsProvider.GetBotSettings().Token);
+            DiscordClient.LoginAsync(Discord.TokenType.Bot, Setting.Token);
             DiscordClient.StartAsync();
             while (true)
       
@@ -68,6 +68,5 @@ namespace DD_Bot.Application.Services
             Console.WriteLine($"{arg.Severity}:{arg.Message}");
             return Task.CompletedTask;
         }
-
     }
 }

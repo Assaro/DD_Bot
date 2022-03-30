@@ -59,6 +59,14 @@
             "Microsoft.Extensions.Configuration.Binder": {
               "target": "Package",
               "version": "[6.0.0, )"
+            },
+            "Renci.SshNet.Async": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "SSH.NET": {
+              "target": "Package",
+              "version": "[2020.0.1, )"
             }
           },
           "imports": [
