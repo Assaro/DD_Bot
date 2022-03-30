@@ -53,6 +53,10 @@ namespace DD_Bot.Application.Services
                 case "docker":
                         DockerCommand.Execute(arg, Docker);
                     return Task.CompletedTask;
+
+                case "list":
+                    ListCommand.Execute(arg, Docker);
+                    return Task.CompletedTask;
             }
             return Task.CompletedTask;
         }
@@ -61,6 +65,7 @@ namespace DD_Bot.Application.Services
         {
             await arg.CreateApplicationCommandAsync(TestCommand.Create());
             await arg.CreateApplicationCommandAsync(DockerCommand.Create());
+            await arg.CreateApplicationCommandAsync(ListCommand.Create());
         }
 
         private Task DiscordClient_MessageReceived(SocketMessage arg)
