@@ -14,7 +14,7 @@ namespace DD_Bot.Application.Services
     {
         private IConfigurationRoot Configuration;
         public Timer UpdateTimer;
-        public Dictionary<string, bool> DockerStatus { get; }
+        public List<DockerContainer> DockerStatus { get; }
         private readonly string updateCommand = "docker ps -a --format \"{{.Names}}\\t{{.State}}\"";
         public SshSettings Setting => Configuration.Get<Settings>().SshSettings;
 
@@ -22,19 +22,17 @@ namespace DD_Bot.Application.Services
         public DockerService(IConfigurationRoot configuration)
         {
             Configuration = configuration;
-            DockerStatus = new Dictionary<string, bool>();
-#pragma warning disable CS4014 // Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
-            UpdateTimer.Elapsed += (s, e) => DockerUpdate();
+            DockerStatus = new List<DockerContainer>();
             DockerUpdate();
             UpdateTimer = new Timer();
-#pragma warning restore CS4014 // Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
             UpdateTimer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
+            UpdateTimer.Elapsed += (s, e) => DockerUpdate();
             UpdateTimer.AutoReset = true;
             UpdateTimer.Start();
         }
 
-        public string[] RunningDockers => DockerStatus.Where(docker => docker.Value).Select(pairs=>pairs.Key).ToArray();
-        public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Value).Select(pairs => pairs.Key).ToArray();
+        public string[] RunningDockers => DockerStatus.Where(docker => docker.Running).Select(pairs => pairs.Name).ToArray();
+        public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Running).Select(pairs => pairs.Name).ToArray();
 
         public async Task DockerUpdate()
         {
@@ -46,12 +44,13 @@ namespace DD_Bot.Application.Services
                 client.Disconnect();
             }
 
-            DictionaryUpdate(result);
+            DockerContainerUpdate(result);
+            DockerContainerSort();
             Console.WriteLine("Updated Status");
             return;
         }
 
-        public void DictionaryUpdate(string sshData) 
+        public void DockerContainerUpdate(string sshData) 
         {
             string[] lines = sshData.Split('\n');
             foreach (string line in lines)
@@ -62,25 +61,46 @@ namespace DD_Bot.Application.Services
 
                 bool status = false;
                 if (parts[1] == "running")
-
-                { status = true; }
-                try
-                {
-                    DockerStatus.Add(parts[0], status);
+                { 
+                    status = true;
                 }
-                catch (ArgumentException)
+                var docker = DockerStatus.FirstOrDefault(docker => docker.Name == parts[0]);
+                if (docker == null)
                 {
-                    DockerStatus[parts[0]] = status;
+                    DockerStatus.Add(new DockerContainer(parts[0], status));
                 }
+                else
+                {
+                    docker.Running = status;
+                }
+                
             }
 
-            foreach (var line in DockerStatus)
+            foreach (var item in DockerStatus)
             {
-                if (!sshData.Contains(line.Key))
+                if (!sshData.Contains(item.Name))
                 {
-                    DockerStatus.Remove(line.Key);
+                    DockerStatus.Remove(item);
                 }
             }
+        }
+
+        public void DockerContainerSort()
+        {
+            DockerStatus.Sort((x,y)=>x.Name.CompareTo(y.Name));
+        }
+
+        public int DockerStatusLongestName()
+        {
+            int counter = 0;
+            foreach (var item in DockerStatus)
+            {
+                if (item.Name.Length> counter)
+                {
+                    counter = item.Name.Length;
+                }
+            }
+            return counter;
         }
 
         public void Start()

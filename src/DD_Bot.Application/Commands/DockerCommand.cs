@@ -62,7 +62,10 @@ namespace DD_Bot.Application.Commands
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Dockername darf nicht null sein");
                 return;
             }
-            if (!dockerService.DockerStatus.ContainsKey(dockerName))
+
+            var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
+
+            if (docker == null)
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker existiert nicht");
                 return;
