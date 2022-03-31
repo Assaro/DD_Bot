@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using System.Linq;
 using DD_Bot.Application.Services;
 
 namespace DD_Bot.Application.Commands

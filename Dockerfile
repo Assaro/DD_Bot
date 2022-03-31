@@ -9,4 +9,4 @@ USER dockeruser
 
 WORKDIR /app/
 
-ENTRYPOINT ["dotnet", "Bot.dll"]
+ENTRYPOINT ["dotnet", "DD_Bot.Bot.dll"]

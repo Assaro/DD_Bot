@@ -16,8 +16,6 @@ if (!File.Exists(settingsFile))
     SettingsProvider.CreateBasicSettings(settingsFile);
 }
 
-
-
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(),"settings"))
     .AddJsonFile("settings.json", false ,true)

@@ -35,10 +35,9 @@ namespace DD_Bot.Application.Services
             DiscordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
             DiscordClient.LoginAsync(Discord.TokenType.Bot, Setting.Token);
             DiscordClient.StartAsync();
+
             while (true)
-      
                 Thread.Sleep(1000);
-            
         }
 
         private Task DiscordClient_SlashCommandExecuted(SocketSlashCommand arg)

@@ -18,7 +18,6 @@ namespace DD_Bot.Application.Services
         private readonly string updateCommand = "docker ps -a --format \"{{.Names}}\\t{{.State}}\"";
         public SshSettings Setting => Configuration.Get<Settings>().SshSettings;
 
-
         public DockerService(IConfigurationRoot configuration)
         {
             Configuration = configuration;
