@@ -1,0 +1,15 @@
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\bin\Release\net5.0\DD_Bot.Application.deps.json
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\bin\Release\net5.0\DD_Bot.Application.dll
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\bin\Release\net5.0\DD_Bot.Application.pdb
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\bin\Release\net5.0\DD_Bot.Domain.dll
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\bin\Release\net5.0\DD_Bot.Domain.pdb
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.csproj.AssemblyReference.cache
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.AssemblyInfoInputs.cache
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.AssemblyInfo.cs
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.csproj.CoreCompileInputs.cache
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.csproj.CopyComplete
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.dll
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\refint\DD_Bot.Application.dll
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\DD_Bot.Application.pdb
+C:\Users\Assaro\Documents\BiB\LEA_2\DD_Bot\src\DD_Bot.Application\obj\Release\net5.0\ref\DD_Bot.Application.dll

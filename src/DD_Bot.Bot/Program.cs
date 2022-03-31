@@ -5,7 +5,7 @@ using DD_Bot.Application.Providers;
 using DD_Bot.Application.Interfaces;
 using DD_Bot.Application.Services;
 
-var settingsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
+var settingsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "settings");
 var settingsFile = Path.Combine(settingsDirectory, "settings.json");
 if (!Directory.Exists(settingsDirectory))
 {
@@ -16,18 +16,18 @@ if (!File.Exists(settingsFile))
     SettingsProvider.CreateBasicSettings(settingsFile);
 }
 
-
 var configuration = new ConfigurationBuilder()
-    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(),"Settings"))
-    .AddJsonFile("Settings.json", false ,true)
+    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(),"settings"))
+    .AddJsonFile("settings.json", false ,true)
     .Build();
-
-SettingsProvider.SetConfiguration(configuration);
 
 var serviceProvider = new ServiceCollection()
     .AddScoped(_ => configuration)
     .AddSingleton<IDiscordService, DiscordService>()
+    .AddSingleton<IDockerService, DockerService>()
     .BuildServiceProvider();
 
+var _dockerService = serviceProvider.GetRequiredService<IDockerService>() as DockerService;
 var _discordBot = serviceProvider.GetRequiredService<IDiscordService>() as DiscordService;
 _discordBot.Start();
+_dockerService.Start();

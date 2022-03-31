@@ -1,27 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DD_Bot.Application.Commands;
 using DD_Bot.Application.Interfaces;
-using DD_Bot.Application.Providers;
+using DD_Bot.Domain;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DD_Bot.Application.Services
 {
     public class DiscordService : IDiscordService
     {
         private IConfigurationRoot Configuration;
+        private IServiceProvider ServiceProvider;
         private DiscordSocketClient DiscordClient;
 
-        public DiscordService(IConfigurationRoot configuration)
+        public DiscordService(IConfigurationRoot configuration, IServiceProvider serviceProvider)
         {
             Configuration = configuration;
+            ServiceProvider = serviceProvider;
             DiscordClient = new DiscordSocketClient();
         }
+
+        public DiscordSettings Setting => Configuration.Get<Settings>().DiscordSettings;
+
+        public DockerService Docker => ServiceProvider.GetRequiredService<IDockerService>() as DockerService;
 
         public void Start()
         {
@@ -29,12 +33,11 @@ namespace DD_Bot.Application.Services
             DiscordClient.MessageReceived += DiscordClient_MessageReceived;
             DiscordClient.GuildAvailable += DiscordClient_GuildAvailable;
             DiscordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
-            DiscordClient.LoginAsync(Discord.TokenType.Bot, SettingsProvider.GetBotSettings().Token);
+            DiscordClient.LoginAsync(Discord.TokenType.Bot, Setting.Token);
             DiscordClient.StartAsync();
+
             while (true)
-      
                 Thread.Sleep(1000);
-            
         }
 
         private Task DiscordClient_SlashCommandExecuted(SocketSlashCommand arg)
@@ -45,8 +48,12 @@ namespace DD_Bot.Application.Services
                     TestCommand.Execute(arg);
                     return Task.CompletedTask;
 
-                case "StartServer":
-                        TestCommand.Execute(arg);
+                case "docker":
+                        DockerCommand.Execute(arg, Docker);
+                    return Task.CompletedTask;
+
+                case "list":
+                    ListCommand.Execute(arg, Docker);
                     return Task.CompletedTask;
             }
             return Task.CompletedTask;
@@ -55,6 +62,8 @@ namespace DD_Bot.Application.Services
         private async Task DiscordClient_GuildAvailable(SocketGuild arg)
         {
             await arg.CreateApplicationCommandAsync(TestCommand.Create());
+            await arg.CreateApplicationCommandAsync(DockerCommand.Create());
+            await arg.CreateApplicationCommandAsync(ListCommand.Create());
         }
 
         private Task DiscordClient_MessageReceived(SocketMessage arg)
@@ -68,6 +77,5 @@ namespace DD_Bot.Application.Services
             Console.WriteLine($"{arg.Severity}:{arg.Message}");
             return Task.CompletedTask;
         }
-
     }
 }

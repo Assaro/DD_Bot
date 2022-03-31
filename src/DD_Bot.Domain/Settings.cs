@@ -8,7 +8,7 @@ namespace DD_Bot.Domain
 {
     public class Settings
     {
-        public string TestVar { get; set; }
-        public string Token { get; set; } = "<- Please Insert Token here! ->";
+        public DiscordSettings DiscordSettings { get; set; }= new DiscordSettings();
+        public SshSettings SshSettings { get; set; } = new SshSettings();
     }
 }
