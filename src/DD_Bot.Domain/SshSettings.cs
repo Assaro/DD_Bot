@@ -6,5 +6,6 @@
         public string SshPassword { get; set; } = "sshpassword";
         public int SshPort { get; set; } = 22;
         public string ServerIp { get; set; } = "192.168.1.1";
+        public string BotName { get; set; } = "DD_Bot";
     }
 }
