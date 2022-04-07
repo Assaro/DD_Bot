@@ -8,19 +8,19 @@ namespace DD_Bot.Application.Commands
 
         private DiscordSocketClient Discord;
 
-        public TestCommand(DiscordSocketClient discord)
+        public TestCommand(DiscordSocketClient discord)//Verbindung zur DiscordAPI
         {
             Discord = discord;
         }
 
-        public static async void Execute(SocketSlashCommand arg)
+        public static async void Execute(SocketSlashCommand arg) //Logik hinter dem Befehl
         {
             //arg.Channel.SendMessageAsync("Pong!");
             //Do Stuff
             await arg.RespondAsync($"Pong! " + arg.User.Mention);
         }
 
-        public static ApplicationCommandProperties Create()
+        public static ApplicationCommandProperties Create() //Werte zum Erstellen des Commands für Discord
         {
             var builder = new SlashCommandBuilder()
             {

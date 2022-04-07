@@ -14,7 +14,7 @@ namespace DD_Bot.Application.Commands
             Discord=discord;
         }
 
-        public static ApplicationCommandProperties Create()
+        public static ApplicationCommandProperties Create() //Create-Methode mit 3 Auswahlmöglichkeiten für den Reiter Command
         {
             var builder = new SlashCommandBuilder()
             {

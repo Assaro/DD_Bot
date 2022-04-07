@@ -16,7 +16,7 @@ namespace DD_Bot.Application.Services
         private IServiceProvider ServiceProvider;
         private DiscordSocketClient DiscordClient;
 
-        public DiscordService(IConfigurationRoot configuration, IServiceProvider serviceProvider)
+        public DiscordService(IConfigurationRoot configuration, IServiceProvider serviceProvider)//Discord Initialisierung
         {
             Configuration = configuration;
             ServiceProvider = serviceProvider;
@@ -27,7 +27,7 @@ namespace DD_Bot.Application.Services
 
         public DockerService Docker => ServiceProvider.GetRequiredService<IDockerService>() as DockerService;
 
-        public void Start()
+        public void Start() //Discord Start
         {
             DiscordClient.Log += DiscordClient_Log;
             DiscordClient.MessageReceived += DiscordClient_MessageReceived;
