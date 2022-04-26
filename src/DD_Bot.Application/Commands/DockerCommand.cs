@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using DD_Bot.Application.Services;
 using System.Linq;
+using DD_Bot.Domain;
 
 namespace DD_Bot.Application.Commands
 {
@@ -53,11 +54,13 @@ namespace DD_Bot.Application.Commands
             return builder.Build();
         }
 
-        public static async void Execute(SocketSlashCommand arg, DockerService dockerService)
+        public static async void Execute(SocketSlashCommand arg, DockerService dockerService, DiscordSettings settings)
         {
             await arg.RespondAsync("Contacting Docker Service...");
+
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
-            if (string.IsNullOrEmpty(dockerName))
+
+            if (string.IsNullOrEmpty(dockerName)) //Schaut ob ein Name für den Docker eingegeben wurde
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Dockername darf nicht null sein");
                 return;
@@ -65,12 +68,18 @@ namespace DD_Bot.Application.Commands
 
             var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
 
-            if (docker == null)
+            if (docker == null) //Schaut ob gesuchter Docker Existiert
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker existiert nicht");
                 return;
             }
             var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
+
+
+            if (!settings.AllowedContainers.Contains(dockerName) && settings.AdminID != arg.User.Id) //Überprüft Berechtigungen
+            {
+                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Du hast nicht die Berechtigung diesen Docker zu steuern");
+            }
 
             switch (command)
             {

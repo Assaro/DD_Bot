@@ -18,7 +18,7 @@ namespace DD_Bot.Application.Commands
             //arg.Channel.SendMessageAsync("Pong!");
             //Do Stuff
             await arg.RespondAsync($"Pong! " + arg.User.Mention);
-            arg.User.
+            
         }
 
         public static ApplicationCommandProperties Create() //Werte zum Erstellen des Commands für Discord
