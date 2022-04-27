@@ -76,7 +76,7 @@ namespace DD_Bot.Application.Commands
             var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
 
 
-            if (!settings.AllowedContainers.Contains(dockerName) && settings.AdminID != arg.User.Id) //Überprüft Berechtigungen
+            if (!settings.AllowedContainers.Contains(dockerName) && !settings.AdminID.Contains(arg.User.Id)) //Überprüft Berechtigungen
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Du hast nicht die Berechtigung diesen Docker zu steuern");
             }
