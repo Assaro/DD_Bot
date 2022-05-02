@@ -66,6 +66,12 @@ namespace DD_Bot.Application.Commands
                 return;
             }
 
+            if (!settings.AllowedContainers.Contains(dockerName) && !settings.AdminID.Contains(arg.User.Id)) //Überprüft Berechtigungen
+            {
+                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Du hast nicht die Berechtigung diesen Docker zu steuern");
+                return;
+            }
+
             var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
 
             if (docker == null) //Schaut ob gesuchter Docker Existiert
@@ -76,10 +82,9 @@ namespace DD_Bot.Application.Commands
             var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
 
 
-            if (!settings.AllowedContainers.Contains(dockerName) && !settings.AdminID.Contains(arg.User.Id)) //Überprüft Berechtigungen
-            {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Du hast nicht die Berechtigung diesen Docker zu steuern");
-            }
+
+
+            
 
             switch (command)
             {
