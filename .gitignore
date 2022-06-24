@@ -16,3 +16,15 @@ src/DD_Bot.Application/obj/project.nuget.cache
 src/DD_Bot.Application/obj/project.assets.json
 src/DD_Bot.Application/obj/DD_Bot.Application.csproj.nuget.g.props
 src/DD_Bot.Application/obj/DD_Bot.Application.csproj.nuget.dgspec.json
+src/DD_Bot.Domain/obj/project.nuget.cache
+src/DD_Bot.Domain/obj/project.assets.json
+src/DD_Bot.Domain/obj/DD_Bot.Domain.csproj.nuget.g.props
+src/DD_Bot.Domain/obj/DD_Bot.Domain.csproj.nuget.dgspec.json
+src/DD_Bot.Bot/obj/project.nuget.cache
+src/DD_Bot.Bot/obj/project.assets.json
+src/DD_Bot.Bot/obj/DD_Bot.Bot.csproj.nuget.g.props
+src/DD_Bot.Bot/obj/DD_Bot.Bot.csproj.nuget.dgspec.json
+src/DD_Bot.Application/obj/project.nuget.cache
+src/DD_Bot.Application/obj/project.assets.json
+src/DD_Bot.Application/obj/DD_Bot.Application.csproj.nuget.g.props
+src/DD_Bot.Application/obj/DD_Bot.Application.csproj.nuget.dgspec.json
