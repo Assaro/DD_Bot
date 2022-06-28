@@ -6,7 +6,7 @@ namespace DD_Bot.Domain
     {
         public string Name { get; set; }
         public bool Running { get; set; }
-        public TimeSpan uptime { get; set; }
+        public TimeSpan Uptime { get; set; }
 
         public DockerContainer(string name, bool running)
         {
@@ -16,7 +16,7 @@ namespace DD_Bot.Domain
 
         public DockerContainer(string name, bool running, TimeSpan uptime) : this(name, running)
         {
-            this.uptime = uptime;
+            this.Uptime = uptime;
         }
     }
 }
