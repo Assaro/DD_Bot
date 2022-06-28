@@ -13,5 +13,10 @@ namespace DD_Bot.Domain
             Name = name;
             Running = running;
         }
+
+        public DockerContainer(string name, bool running, TimeSpan uptime) : this(name, running)
+        {
+            this.uptime = uptime;
+        }
     }
 }
