@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using DD_Bot.Application.Services;
+using DD_Bot.Domain;
+using System.Linq;
 
 namespace DD_Bot.Application.Commands
 {
@@ -22,7 +24,7 @@ namespace DD_Bot.Application.Commands
             return builder.Build();
         }
 
-        public static async void Execute(SocketSlashCommand arg, DockerService dockerService)
+        public static async void Execute(SocketSlashCommand arg, DockerService dockerService, DiscordSettings settings)
         {
             await arg.RespondAsync("Contacting Docker Service...");
             await dockerService.DockerUpdate();
@@ -41,14 +43,17 @@ namespace DD_Bot.Application.Commands
                 + "\n";
             foreach (var item in dockerService.DockerStatus)
             {
-                output = output + "|" + item.Name + new string(' ', maxlength - item.Name.Length);
-                if (item.Running)
+                if (settings.AllowedContainers.Contains(item.Name) || settings.AdminID.Contains(arg.User.Id))
                 {
-                    output = output + "| Running |\n";
-                }
-                else
-                {
-                    output = output + "| Stopped |\n";
+                    output = output + "|" + item.Name + new string(' ', maxlength - item.Name.Length);
+                    if (item.Running)
+                    {
+                        output = output + "| Running |\n";
+                    }
+                    else
+                    {
+                        output = output + "| Stopped |\n";
+                    }
                 }
             }
             output = output + new string('¯', 12 + maxlength) + "\n" + "```";

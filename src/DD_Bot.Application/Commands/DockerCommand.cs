@@ -60,6 +60,7 @@ namespace DD_Bot.Application.Commands
 
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
+            #region authCheck
             if (string.IsNullOrEmpty(dockerName)) //Schaut ob ein Name für den Docker eingegeben wurde
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Dockername darf nicht null sein");
@@ -79,12 +80,10 @@ namespace DD_Bot.Application.Commands
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker existiert nicht");
                 return;
             }
+
+            #endregion
+
             var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
-
-
-
-
-            
 
             switch (command)
             {

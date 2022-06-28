@@ -53,7 +53,7 @@ namespace DD_Bot.Application.Services
                     return Task.CompletedTask;
 
                 case "list":
-                    ListCommand.Execute(arg, Docker);
+                    ListCommand.Execute(arg, Docker, Setting);
                     return Task.CompletedTask;
             }
             return Task.CompletedTask;
