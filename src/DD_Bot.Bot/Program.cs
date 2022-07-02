@@ -24,7 +24,7 @@ if (!Directory.Exists(languageDirectory))
 }
 if (!File.Exists(languageFile))
 {
-    SettingsProvider.CreateBasicSettings(languageFile);
+    LanguageProvider.CreateStandardLanguage(languageFile);
 }
 
 var configuration = new ConfigurationBuilder()
