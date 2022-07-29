@@ -27,12 +27,12 @@ namespace DD_Bot.Application.Commands
 
             builder.AddOption("dockername",
                 ApplicationCommandOptionType.String,
-                    "Name des Containers",
+                    "choose a container",
                     true);
 
             builder.AddOption("command",
                 ApplicationCommandOptionType.String, 
-                "wähle den Befehl aus", 
+                "choose a command", 
                 true, 
                 choices: new ApplicationCommandOptionChoiceProperties[]
                 {
@@ -65,13 +65,13 @@ namespace DD_Bot.Application.Commands
             #region authCheck
             if (string.IsNullOrEmpty(dockerName)) //Schaut ob ein Name für den Docker eingegeben wurde
             {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Dockername darf nicht null sein");
+                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "No name has been specified");
                 return;
             }
 
             if (!settings.AllowedContainers.Contains(dockerName) && !settings.AdminID.Contains(arg.User.Id)) //Überprüft Berechtigungen
             {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Du hast nicht die Berechtigung diesen Docker zu steuern");
+                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
                 return;
             }
 
@@ -79,7 +79,7 @@ namespace DD_Bot.Application.Commands
 
             if (docker == null) //Schaut ob gesuchter Docker Existiert
             {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker existiert nicht");
+                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker doesnt exist");
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace DD_Bot.Application.Commands
                 case "start":
                     if (dockerService.RunningDockers.Contains(dockerName))
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker ist bereits gestartet");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker is already running");
                         return;
                     }
                     break;
@@ -100,7 +100,7 @@ namespace DD_Bot.Application.Commands
                 case "restart":
                     if (dockerService.StoppedDockers.Contains(dockerName))
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker ist gestoppt");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker ist already stopped");
                         return;
                     }
                     break;
@@ -114,35 +114,35 @@ namespace DD_Bot.Application.Commands
                 case "start":
                     if (dockerService.RunningDockers.Contains(dockerName))
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker wurde erfolgreich gestartet");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker has been started");
                         return;
                     }
                     else
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention +  " Docker konnte nicht gestartet werden");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention +  " Docker could not be started");
                         return;
                     }
                 case "stop":
                     if (dockerService.StoppedDockers.Contains(dockerName))
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker wurde erfolgreich gestoppt");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker has been stopped");
                         return;
                     }
                     else
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker konnte nicht gestoppt werden");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker could not be stopped nicht gestoppt werden");
                         return;
                     }
 
                 case "restart":
                     if (dockerService.RunningDockers.Contains(dockerName))
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker wurde erfolgreich neugestartet");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker has been restarted");
                         return;
                     }
                     else
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker konnte nicht neugestartet werden");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker could not be restarted");
                         return;
                     }
             }

@@ -34,7 +34,7 @@ namespace DD_Bot.Application.Commands
             {
                 maxlength = 14;
             }
-            string output = "**Liste aller Docker-Container**\n```\n"
+            string output = "**List of all known Containers**\n```\n"
                 + new string('¯', 12 + maxlength)
                 + "\n|Containername"
                 + new string(' ', maxlength - 13)
