@@ -36,10 +36,12 @@ var configuration = new ConfigurationBuilder()
 
 string languageJson = string.Format(configuration.Get<Settings>().LanguageSettings.Language + ".json");
 
-var language = new ConfigurationBuilder()
+/*
+   var language = new ConfigurationBuilder()
     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "settings/languages"))
     .AddJsonFile(languageJson, false, true)
     .Build();
+*/
 
 var serviceProvider = new ServiceCollection()
     .AddScoped(_ => configuration)
