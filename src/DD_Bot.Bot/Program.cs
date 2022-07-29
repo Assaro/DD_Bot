@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿    using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using DD_Bot.Application.Providers;
@@ -7,9 +7,9 @@ using DD_Bot.Application.Services;
 using DD_Bot.Domain;
 
 var settingsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "settings");
-var languageDirectory = Path.Combine(settingsDirectory, "languages");
+//var languageDirectory = Path.Combine(settingsDirectory, "languages");
 var settingsFile = Path.Combine(settingsDirectory, "settings.json");
-var languageFile = Path.Combine(languageDirectory, "en.json");
+//var languageFile = Path.Combine(languageDirectory, "en.json");
 if (!Directory.Exists(settingsDirectory))
 {
     Directory.CreateDirectory(settingsDirectory);
@@ -18,6 +18,7 @@ if (!File.Exists(settingsFile))
 {
     SettingsProvider.CreateBasicSettings(settingsFile);
 }
+/*
 if (!Directory.Exists(languageDirectory))
 {
     Directory.CreateDirectory(languageDirectory);
@@ -26,6 +27,7 @@ if (!File.Exists(languageFile))
 {
     LanguageProvider.CreateStandardLanguage(languageFile);
 }
+*/
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(),"settings"))
