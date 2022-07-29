@@ -18,6 +18,7 @@ namespace DD_Bot.Application.Commands
             //arg.Channel.SendMessageAsync("Pong!");
             //Do Stuff
             await arg.RespondAsync($"Pong! " + arg.User.Mention);
+            
         }
 
         public static ApplicationCommandProperties Create()

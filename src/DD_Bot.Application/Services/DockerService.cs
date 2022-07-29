@@ -15,10 +15,11 @@ namespace DD_Bot.Application.Services
         private IConfigurationRoot Configuration;
         public Timer UpdateTimer;
         public List<DockerContainer> DockerStatus { get; }
+
         private readonly string updateCommand = "docker ps -a --format \"{{.Names}}\\t{{.State}}\"";
         public SshSettings Setting => Configuration.Get<Settings>().SshSettings;
 
-        public DockerService(IConfigurationRoot configuration)
+        public DockerService(IConfigurationRoot configuration) // Initialisierung
         {
             Configuration = configuration;
             DockerStatus = new List<DockerContainer>();
@@ -33,7 +34,7 @@ namespace DD_Bot.Application.Services
         public string[] RunningDockers => DockerStatus.Where(docker => docker.Running).Select(pairs => pairs.Name).ToArray();
         public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Running).Select(pairs => pairs.Name).ToArray();
 
-        public async Task DockerUpdate()
+        public async Task DockerUpdate() //Update der Liste via SSH
         {
             string result;
             using (var client = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword))
@@ -107,7 +108,7 @@ namespace DD_Bot.Application.Services
             Console.WriteLine("DockerService startet");
         }
 
-        public async Task DockerCommand(string commandName, string dockerName)
+        public async Task DockerCommand(string commandName, string dockerName) //ausführen eines Befehls über SSH
         {
             using( var client = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword))
             {
