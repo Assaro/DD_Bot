@@ -46,7 +46,7 @@ namespace DD_Bot.Application.Services
 
             DockerContainerUpdate(result);
             DockerContainerSort();
-            Console.WriteLine("Updated Status");
+            Console.WriteLine("["+ DateTime.Now.ToLongTimeString() +"] Updated Status");
             return;
         }
 
