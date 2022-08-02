@@ -9,7 +9,7 @@ namespace DD_Bot.Application.Providers
         public static void CreateBasicSettings(string settingsFile)
         {
             var settings = new Settings();
-            File.WriteAllText(settingsFile, JsonConvert.SerializeObject(settings));
+            File.WriteAllText(settingsFile, JsonConvert.SerializeObject(settings, Formatting.Indented));
         }
     }
 }
