@@ -45,6 +45,7 @@ namespace DD_Bot.Application.Services
 
         public async Task DockerUpdate() //Update der Liste via SSH
         {
+            SshClientUpdate();
             string result;
 
                 sshClient.Connect();
@@ -118,7 +119,7 @@ namespace DD_Bot.Application.Services
 
         public async Task DockerCommand(string commandName, string dockerName) //ausführen eines Befehls über SSH
         {
-
+                SshClientUpdate();
                 sshClient.Connect();
                 sshClient.RunCommand(string.Format("docker " +commandName + dockerName));
                 sshClient.Disconnect();
