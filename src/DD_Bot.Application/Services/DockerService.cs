@@ -25,8 +25,7 @@ namespace DD_Bot.Application.Services
         public DockerService(IConfigurationRoot configuration) // Initialisierung
         {
             Configuration = configuration;
-            sshClient = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword);
-
+            SshClientUpdate();
             DockerStatus = new List<DockerContainer>();
             DockerUpdate();
             UpdateTimer = new Timer();
@@ -38,6 +37,11 @@ namespace DD_Bot.Application.Services
 
         public string[] RunningDockers => DockerStatus.Where(docker => docker.Running).Select(pairs => pairs.Name).ToArray();
         public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Running).Select(pairs => pairs.Name).ToArray();
+
+        public void SshClientUpdate()
+        {
+            sshClient = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword);
+        }
 
         public async Task DockerUpdate() //Update der Liste via SSH
         {
