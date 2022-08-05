@@ -14,14 +14,19 @@ namespace DD_Bot.Application.Services
     {
         private IConfigurationRoot Configuration;
         public Timer UpdateTimer;
+
         public List<DockerContainer> DockerStatus { get; }
 
         private readonly string updateCommand = "docker ps -a --format \"{{.Names}}\\t{{.State}}\"";
         public SshSettings Setting => Configuration.Get<Settings>().SshSettings;
 
+        private SshClient sshClient;
+
         public DockerService(IConfigurationRoot configuration) // Initialisierung
         {
             Configuration = configuration;
+            sshClient = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword);
+
             DockerStatus = new List<DockerContainer>();
             DockerUpdate();
             UpdateTimer = new Timer();
@@ -37,12 +42,11 @@ namespace DD_Bot.Application.Services
         public async Task DockerUpdate() //Update der Liste via SSH
         {
             string result;
-            using (var client = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword))
-            {
-                client.Connect();
-                result = client.RunCommand(updateCommand).Result;
-                client.Disconnect();
-            }
+
+                sshClient.Connect();
+                result = sshClient.RunCommand(updateCommand).Result;
+                sshClient.Disconnect();
+
 
             DockerContainerUpdate(result);
             DockerContainerSort();
@@ -110,12 +114,10 @@ namespace DD_Bot.Application.Services
 
         public async Task DockerCommand(string commandName, string dockerName) //ausführen eines Befehls über SSH
         {
-            using( var client = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword))
-            {
-                client.Connect();
-                client.RunCommand(string.Format("docker " +commandName + dockerName));
-                client.Disconnect();
-            }
+
+                sshClient.Connect();
+                sshClient.RunCommand(string.Format("docker " +commandName + dockerName));
+                sshClient.Disconnect();
             return;
         }
     }
