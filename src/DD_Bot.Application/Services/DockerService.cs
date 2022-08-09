@@ -43,7 +43,7 @@ namespace DD_Bot.Application.Services
             sshClient = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword);
         }
 
-        public async Task DockerUpdate() //Update der Liste via SSH
+        public void DockerUpdate() //Update der Liste via SSH
         {
             SshClientUpdate();
             string result;
@@ -117,7 +117,7 @@ namespace DD_Bot.Application.Services
             Console.WriteLine("DockerService startet");
         }
 
-        public async Task DockerCommand(string commandName, string dockerName) //ausführen eines Befehls über SSH
+        public void DockerCommand(string commandName, string dockerName) //ausführen eines Befehls über SSH
         {
                 SshClientUpdate();
                 sshClient.Connect();

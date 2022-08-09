@@ -106,8 +106,8 @@ namespace DD_Bot.Application.Commands
                     break;
             }
 
-            await dockerService.DockerCommand(command + " ", dockerName);
-            await dockerService.DockerUpdate();
+            dockerService.DockerCommand(command + " ", dockerName);
+            dockerService.DockerUpdate();
 
             switch (command)
             {
