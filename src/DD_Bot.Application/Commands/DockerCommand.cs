@@ -100,7 +100,7 @@ namespace DD_Bot.Application.Commands
                 case "restart":
                     if (dockerService.StoppedDockers.Contains(dockerName))
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker ist already stopped");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker is already stopped");
                         return;
                     }
                     break;
