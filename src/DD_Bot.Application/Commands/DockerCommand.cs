@@ -64,7 +64,13 @@ namespace DD_Bot.Application.Commands
 
             if (!settings.AdminIDs.Contains(arg.User.Id)) //Überprüft Berechtigungen
             {
-                if (settings.UserWhitelist && !settings.AllowedContainers.Contains(dockerName) && !settings.UserIDs.Contains(arg.User.Id))
+                if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
+                {
+                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
+                    return;
+                }
+
+                if (!settings.AllowedContainers.Contains(dockerName))
                 {
                     await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
                     return;
