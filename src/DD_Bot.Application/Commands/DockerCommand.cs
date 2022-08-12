@@ -62,6 +62,15 @@ namespace DD_Bot.Application.Commands
 
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
+            if (!settings.AdminIDs.Contains(arg.User.Id)) //Überprüft Berechtigungen
+            {
+                if (settings.UserWhitelist && !settings.AllowedContainers.Contains(dockerName) && !settings.UserIDs.Contains(arg.User.Id))
+                {
+                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
+                    return;
+                }
+            }
+
             #region authCheck
             if (string.IsNullOrEmpty(dockerName)) //Schaut ob ein Name für den Docker eingegeben wurde
             {
@@ -69,11 +78,6 @@ namespace DD_Bot.Application.Commands
                 return;
             }
 
-            if (!settings.AllowedContainers.Contains(dockerName) && !settings.AdminID.Contains(arg.User.Id)) //Überprüft Berechtigungen
-            {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
-                return;
-            }
 
             var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
 
