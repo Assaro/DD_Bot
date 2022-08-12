@@ -60,6 +60,8 @@ namespace DD_Bot.Application.Commands
         {
             await arg.RespondAsync("Contacting Docker Service...");
 
+            var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
+
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
             if (!settings.AdminIDs.Contains(arg.User.Id)) //Überprüft Berechtigungen
@@ -73,6 +75,12 @@ namespace DD_Bot.Application.Commands
                 if (!settings.AllowedContainers.Contains(dockerName))
                 {
                     await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
+                    return;
+                }
+
+                if (!settings.UsersCanStopContainers && (command == "stop"|| command == "restart"))
+                {
+                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to stop or restart this docker");
                     return;
                 }
             }
@@ -95,7 +103,6 @@ namespace DD_Bot.Application.Commands
 
             #endregion
 
-            var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
 
             switch (command)
             {
