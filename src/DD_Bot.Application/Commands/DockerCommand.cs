@@ -64,6 +64,8 @@ namespace DD_Bot.Application.Commands
 
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
+            #region authCheck
+
             if (!settings.AdminIDs.Contains(arg.User.Id)) //Überprüft Berechtigungen
             {
                 if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
@@ -85,7 +87,8 @@ namespace DD_Bot.Application.Commands
                 }
             }
 
-            #region authCheck
+            #endregion
+
             if (string.IsNullOrEmpty(dockerName)) //Schaut ob ein Name für den Docker eingegeben wurde
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "No name has been specified");
@@ -101,7 +104,6 @@ namespace DD_Bot.Application.Commands
                 return;
             }
 
-            #endregion
 
 
             switch (command)
