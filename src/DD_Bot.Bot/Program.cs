@@ -6,6 +6,7 @@ using DD_Bot.Application.Interfaces;
 using DD_Bot.Application.Services;
 using DD_Bot.Domain;
 
+#region CreateSettingsFiles
 var settingsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "settings");
 //var languageDirectory = Path.Combine(settingsDirectory, "languages");
 var settingsFile = Path.Combine(settingsDirectory, "settings.json");
@@ -29,12 +30,15 @@ if (!File.Exists(languageFile))
 }
 */
 
+#endregion
+
+#region ReadSettingsFromFile
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(),"settings"))
     .AddJsonFile("settings.json", false ,true)
     .Build();
 
-string languageJson = string.Format(configuration.Get<Settings>().LanguageSettings.Language + ".json");
+//string languageJson = string.Format(configuration.Get<Settings>().LanguageSettings.Language + ".json");
 
 /*
    var language = new ConfigurationBuilder()
@@ -43,11 +47,14 @@ string languageJson = string.Format(configuration.Get<Settings>().LanguageSettin
     .Build();
 */
 
+#endregion
+
 var serviceProvider = new ServiceCollection()
     .AddScoped(_ => configuration)
     .AddSingleton<IDiscordService, DiscordService>()
     .AddSingleton<IDockerService, DockerService>()
     .BuildServiceProvider();
+
 
 var _dockerService = serviceProvider.GetRequiredService<IDockerService>() as DockerService;
 var _discordBot = serviceProvider.GetRequiredService<IDiscordService>() as DiscordService;
