@@ -60,20 +60,41 @@ namespace DD_Bot.Application.Commands
         {
             await arg.RespondAsync("Contacting Docker Service...");
 
+            var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
+
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
             #region authCheck
+
+            if (!settings.AdminIDs.Contains(arg.User.Id)) //Überprüft Berechtigungen
+            {
+                if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
+                {
+                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
+                    return;
+                }
+
+                if (!settings.AllowedContainers.Contains(dockerName))
+                {
+                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
+                    return;
+                }
+
+                if (!settings.UsersCanStopContainers && (command == "stop"|| command == "restart"))
+                {
+                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to stop or restart this docker");
+                    return;
+                }
+            }
+
+            #endregion
+
             if (string.IsNullOrEmpty(dockerName)) //Schaut ob ein Name für den Docker eingegeben wurde
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "No name has been specified");
                 return;
             }
 
-            if (!settings.AllowedContainers.Contains(dockerName) && !settings.AdminID.Contains(arg.User.Id)) //Überprüft Berechtigungen
-            {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
-                return;
-            }
 
             var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
 
@@ -83,9 +104,7 @@ namespace DD_Bot.Application.Commands
                 return;
             }
 
-            #endregion
 
-            var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
 
             switch (command)
             {
@@ -100,7 +119,7 @@ namespace DD_Bot.Application.Commands
                 case "restart":
                     if (dockerService.StoppedDockers.Contains(dockerName))
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker ist already stopped");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker is already stopped");
                         return;
                     }
                     break;
