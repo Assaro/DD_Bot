@@ -13,13 +13,7 @@ namespace DD_Bot.Application.Commands
             Discord = discord;
         }
 
-        public static async void Execute(SocketSlashCommand arg)
-        {
-            //arg.Channel.SendMessageAsync("Pong!");
-            //Do Stuff
-            await arg.RespondAsync($"Pong! " + arg.User.Mention);
-            
-        }
+        #region CreateCommand
 
         public static ApplicationCommandProperties Create()
         {
@@ -31,6 +25,19 @@ namespace DD_Bot.Application.Commands
             return builder.Build();
         }
 
+        #endregion
+
+        #region ExecuteCommand
+
+        public static async void Execute(SocketSlashCommand arg)
+        {
+            //arg.Channel.SendMessageAsync("Pong!");
+            //Do Stuff
+            await arg.RespondAsync($"Pong! " + arg.User.Mention);
+            
+        }
+
+        #endregion
     }
 
 }

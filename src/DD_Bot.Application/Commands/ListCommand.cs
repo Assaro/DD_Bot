@@ -14,6 +14,7 @@ namespace DD_Bot.Application.Commands
             Discord = discord;
         }
 
+        #region CreateCommand
         public static ApplicationCommandProperties Create()
         {
             var builder = new SlashCommandBuilder()
@@ -23,6 +24,10 @@ namespace DD_Bot.Application.Commands
             };
             return builder.Build();
         }
+
+        #endregion
+
+        #region ExecuteCommand
 
         public static async void Execute(SocketSlashCommand arg, DockerService dockerService, DiscordSettings settings)
         {
@@ -67,6 +72,8 @@ namespace DD_Bot.Application.Commands
             await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
             return;
         }
+
+        #endregion
 
     }
 }

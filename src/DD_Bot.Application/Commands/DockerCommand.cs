@@ -15,7 +15,7 @@ namespace DD_Bot.Application.Commands
             Discord=discord;
         }
 
-
+        #region CreateCommand
 
         public static ApplicationCommandProperties Create() //Create-Methode mit 3 Auswahlmöglichkeiten für den Reiter Command
         {
@@ -56,6 +56,10 @@ namespace DD_Bot.Application.Commands
             return builder.Build();
         }
 
+        #endregion
+
+        #region ExecuteCommand
+
         public static async void Execute(SocketSlashCommand arg, DockerService dockerService, DiscordSettings settings)
         {
             await arg.RespondAsync("Contacting Docker Service...");
@@ -95,7 +99,6 @@ namespace DD_Bot.Application.Commands
                 return;
             }
 
-
             var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
 
             if (docker == null) //Schaut ob gesuchter Docker Existiert
@@ -103,8 +106,6 @@ namespace DD_Bot.Application.Commands
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker doesnt exist");
                 return;
             }
-
-
 
             switch (command)
             {
@@ -152,7 +153,6 @@ namespace DD_Bot.Application.Commands
                         await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker could not be stopped nicht gestoppt werden");
                         return;
                     }
-
                 case "restart":
                     if (dockerService.RunningDockers.Contains(dockerName))
                     {
@@ -166,5 +166,7 @@ namespace DD_Bot.Application.Commands
                     }
             }
         }
+
+        #endregion
     }
 }
