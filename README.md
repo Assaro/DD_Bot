@@ -4,7 +4,7 @@
 
 <p align="center">
 <img alt="Docker Image Size (tag)" src="https://img.shields.io/docker/image-size/assaro/ddbot/latest?style=for-the-badge">
-<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/assaro/ddbot?color=brightgreen&style=for-the-badge">
+<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/assaro/DD_Bot?color=brightgreen?style=for-the-badge">
 <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/assaro/ddbot?style=for-the-badge"></p>
 
 `"Conveniently, this program can be used as a Docker Container"` - ***Gadget Gabe***
