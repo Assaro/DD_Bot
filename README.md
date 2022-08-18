@@ -50,6 +50,6 @@
 - [ ] \(Maybe) implement RCON to control gameservers
 
 
-### If you like my work, feel free to buy me a coffe
+### If you like my work, feel free to buy me a coffee
 <p>
 <br><a href="https://www.buymeacoffee.com/assaro"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="assaro" /></a></p>
