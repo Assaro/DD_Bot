@@ -7,7 +7,7 @@
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/assaro/DD_Bot?color=brightgreen&style=for-the-badge">
 <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/assaro/ddbot?style=for-the-badge"></p>
 
-`"Conveniently, this program can be used as a Docker Container"` - ***Gadget Gabe***
+`"Conveniently, the program itself can be used as a Docker Container"` - ***Gadget Gabe***
 
 ## Screenshots
 
