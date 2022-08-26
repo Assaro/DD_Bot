@@ -8,10 +8,10 @@ namespace DD_Bot.Application.Commands
 {
     internal class ListCommand
     {
-        private DiscordSocketClient Discord;
+        private DiscordSocketClient _discord;
         public ListCommand(DiscordSocketClient discord)
         {
-            Discord = discord;
+            _discord = discord;
         }
 
         public static ApplicationCommandProperties Create()
