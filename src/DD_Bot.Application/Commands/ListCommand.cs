@@ -27,7 +27,7 @@ namespace DD_Bot.Application.Commands
         public static async void Execute(SocketSlashCommand arg, DockerService dockerService, DiscordSettings settings)
         {
             await arg.RespondAsync("Contacting Docker Service...");
-            await dockerService.DockerUpdate();
+            dockerService.DockerUpdate();
 
             if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
             {
