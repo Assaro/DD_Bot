@@ -16,7 +16,6 @@ namespace DD_Bot.Application.Services
         private readonly IConfigurationRoot _configuration;
         private IList<ContainerListResponse> _dockerResponse;
         public List<ContainerListResponse> DockerStatus { get; private set; }
-
         private readonly DockerClient _client = new DockerClientConfiguration(
                 new Uri("unix:///var/run/docker.sock"))
             .CreateClient();
@@ -34,9 +33,9 @@ namespace DD_Bot.Application.Services
             updateTimer.Start();
         }
 
-        public string[] RunningDockers => DockerStatus.Where(docker => docker.State.Contains("Up")).Select(pairs => pairs.Names[0]).ToArray();
-        public string[] StoppedDockers => DockerStatus.Where(docker => !docker.State.Contains("Up")).Select(pairs => pairs.Names[0]).ToArray();
-        
+     public string[] RunningDockers => DockerStatus.Where(docker => docker.Status.Contains("Up")).Select(pairs => pairs.Names[0]).ToArray();
+     public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Status.Contains("Up")).Select(pairs => pairs.Names[0]).ToArray();
+     
         public async Task DockerUpdate() //Update
         {
             _dockerResponse = await _client.Containers.ListContainersAsync(new ContainersListParameters(){All = true});

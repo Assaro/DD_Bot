@@ -1,7 +1,9 @@
-﻿using Discord;
+﻿using System;
+using Discord;
 using Discord.WebSocket;
 using DD_Bot.Application.Services;
 using System.Linq;
+using System.Threading;
 using DD_Bot.Domain;
 
 namespace DD_Bot.Application.Commands
@@ -127,14 +129,21 @@ namespace DD_Bot.Application.Commands
             switch (command)
             {
                case "start":
+                   dockerService.DockerCommandStart(dockerId);
                     break;
                case "stop":
+                   dockerService.DockerCommandStop(dockerId);
                     break;
                case "restart":
+                   dockerService.DockerCommandRestart(dockerId);
                     break;
             }
+
+            await arg.ModifyOriginalResponseAsync(edit =>
+                edit.Content = arg.User.Mention + " Command has been sent. Awaiting response");
             
-            dockerService.DockerUpdate();
+            Thread.Sleep(TimeSpan.FromSeconds(5));
+            await dockerService.DockerUpdate();
 
             switch (command)
             {
@@ -157,7 +166,7 @@ namespace DD_Bot.Application.Commands
                     }
                     else
                     {
-                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker could not be stopped nicht gestoppt werden");
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " Docker could not be stopped");
                         return;
                     }
 
