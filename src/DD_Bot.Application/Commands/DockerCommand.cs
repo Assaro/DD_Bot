@@ -8,11 +8,11 @@ namespace DD_Bot.Application.Commands
 {
     public class DockerCommand
     {
-        private DiscordSocketClient Discord;
+        private DiscordSocketClient _discord;
 
         public DockerCommand(DiscordSocketClient discord)
         {
-            Discord=discord;
+            _discord=discord;
         }
         
         public static ApplicationCommandProperties Create() //Create-Methode mit 3 Auswahlmöglichkeiten für den Reiter Command
@@ -32,7 +32,7 @@ namespace DD_Bot.Application.Commands
                 ApplicationCommandOptionType.String, 
                 "choose a command", 
                 true, 
-                choices: new ApplicationCommandOptionChoiceProperties[]
+                choices: new[]
                 {
                     new ApplicationCommandOptionChoiceProperties()
                     {
@@ -57,14 +57,15 @@ namespace DD_Bot.Application.Commands
         public static async void Execute(SocketSlashCommand arg, DockerService dockerService, DiscordSettings settings)
         {
             await arg.RespondAsync("Contacting Docker Service...");
-
+            await dockerService.DockerUpdate();
+            
             var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
 
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
             #region authCheck
 
-            if (!settings.AdminIDs.Contains(arg.User.Id)) //Überprüft Berechtigungen
+            if (!settings.AdminIDs.Contains(arg.User.Id)) //Auth Checks
             {
                 if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
                 {
@@ -94,7 +95,7 @@ namespace DD_Bot.Application.Commands
             }
 
 
-            var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
+            var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Names[0] == dockerName);
 
             if (docker == null) //Schaut ob gesuchter Docker Existiert
             {
@@ -102,7 +103,7 @@ namespace DD_Bot.Application.Commands
                 return;
             }
 
-
+            var dockerId = docker.ID;
 
             switch (command)
             {
@@ -123,7 +124,16 @@ namespace DD_Bot.Application.Commands
                     break;
             }
 
-            dockerService.DockerCommand(command + " ", dockerName);
+            switch (command)
+            {
+               case "start":
+                    break;
+               case "stop":
+                    break;
+               case "restart":
+                    break;
+            }
+            
             dockerService.DockerUpdate();
 
             switch (command)

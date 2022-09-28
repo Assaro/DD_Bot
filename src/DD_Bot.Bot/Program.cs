@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using DD_Bot.Application.Providers;
 using DD_Bot.Application.Interfaces;
 using DD_Bot.Application.Services;
-using DD_Bot.Domain;
 
 #region CreateSettingsFiles
 var settingsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "settings");
@@ -56,7 +56,9 @@ var serviceProvider = new ServiceCollection()
     .BuildServiceProvider();
 
 
-var _dockerService = serviceProvider.GetRequiredService<IDockerService>() as DockerService;
-var _discordBot = serviceProvider.GetRequiredService<IDiscordService>() as DiscordService;
-_discordBot.Start();
-_dockerService.Start();
+var dockerService = serviceProvider.GetRequiredService<IDockerService>() as DockerService;
+if (dockerService == null) throw new ArgumentNullException(nameof(dockerService));
+var discordBot = serviceProvider.GetRequiredService<IDiscordService>() as DiscordService;
+if (discordBot == null) throw new ArgumentNullException(nameof(discordBot));
+discordBot.Start();
+dockerService.Start();
