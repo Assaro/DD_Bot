@@ -11,7 +11,7 @@
 
 ## Screenshots
 
-![Show Status of Containers](/pics/Listcommand.png)
+![Show Status of Containers](pics/Listcommand.png)
 ![Structured Settings File](pics/Settings.png)
 ![Send Command to Server](pics/Dockercommand.png)
 ![Bot's reply to command](pics/Dockerstart.png)
@@ -21,7 +21,7 @@
 - Remotely start and stop Docker Containers using Discord Slash Commands
 - Enable Friends to start specified Containers, e.g. Gameservers
     - Save Energy when noone is playing
-- DD_Bot is designed to work on the same or a different machine in its own Container
+- DD_Bot is designed to work on the same machine in its own Container
 - Easy configuration through a single json file
 - Built using [Discord.NET](https://github.com/discord-net/Discord.Net) and [SSH.NET](https://github.com/sshnet/SSH.NET)
 
