@@ -28,9 +28,7 @@
 ## Requirements
 
 - Docker
-- SSH Access to your servers root
 - a correctly configured bot from [Discord Developer Portal](https://discord.com/developers/), instructions can be found [here](/sites/discordbot.md)
-- ~160Mb storage space
 - Internet connection
 
 ## [Installation](/sites/installation.md)
@@ -42,7 +40,7 @@
 ## To-Do List
 
 - [x] Initial Release
-- [ ] Add option for SSH Keyfiles instead of a password
+- [ ] Rewrite for docker sockets
 - [ ] Fully customizable messages for Discord
 - [ ] More statistics
 - [ ] \(Maybe) Auto-Shutdown for certain containers
