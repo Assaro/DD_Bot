@@ -20,7 +20,7 @@ namespace DD_Bot.Application.Services
                 new Uri("unix:///var/run/docker.sock"))
             .CreateClient();
         
-        private DockerSettings Setting => _configuration.Get<Settings>().SshSettings;
+        private DockerSettings Setting => _configuration.Get<Settings>().DockerSettings;
         
         public DockerService(IConfigurationRoot configuration) // Initialising
         {

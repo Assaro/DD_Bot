@@ -4,6 +4,6 @@
     {
         public LanguageSettings LanguageSettings { get; set; } = new LanguageSettings();
         public DiscordSettings DiscordSettings { get; set; } = new DiscordSettings();
-        public DockerSettings SshSettings { get; set; } = new DockerSettings();
+        public DockerSettings DockerSettings { get; set; } = new DockerSettings();
     }
 }
