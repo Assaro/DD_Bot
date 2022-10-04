@@ -13,9 +13,5 @@
         - [how to find your ID](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-)
     - UsersCanStopContainers: If set to true, every user can stop and restart AllowedContainers. Whitelist still applies
     - AllowedContainers: List of Containers that will be listed and controllable for normal Users. **Case-Sensitive!!** Whitelist still applies
-- SSHSettings
-    - SshUser: Name of user for logging in to the server. Currently has to be root
-    - SshPassword: Users password
-    - SshPort: Your Servers SSH Port. Defaults to 22
-    - ServerIP: Your Servers IP-Address, either local or public. Domain also possible
+- DockerSettings
     - BotName: The Name you gave this Container. Prevents shutting down itself

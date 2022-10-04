@@ -23,7 +23,7 @@
     - Save Energy when noone is playing
 - DD_Bot is designed to work on the same machine in its own Container
 - Easy configuration through a single json file
-- Built using [Discord.NET](https://github.com/discord-net/Discord.Net) and [SSH.NET](https://github.com/sshnet/SSH.NET)
+- Built using [Discord.NET](https://github.com/discord-net/Discord.Net) and [Docker.DotNet](https://github.com/dotnet/Docker.DotNet)
 
 ## Requirements
 
