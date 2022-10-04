@@ -146,7 +146,7 @@ namespace DD_Bot.Application.Commands
             }
 
             await arg.ModifyOriginalResponseAsync(edit =>
-                edit.Content = arg.User.Mention + " Command has been sent. Awaiting response");
+                edit.Content = "Command has been sent. Awaiting response");
             
             Thread.Sleep(TimeSpan.FromSeconds(5));
             await dockerService.DockerUpdate();
