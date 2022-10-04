@@ -1,6 +1,6 @@
 <h1 align="center">DD_Bot</h1>
 
-<p align="center">A Discord-Bot to start and stop Docker Containers, using SSH</p>
+<p align="center">A Discord-Bot to start and stop Docker Containers, using the Docker Socket</p>
 
 <p align="center">
 <img alt="Docker Image Size (tag)" src="https://img.shields.io/docker/image-size/assaro/ddbot/latest?style=for-the-badge">
@@ -40,7 +40,7 @@
 ## To-Do List
 
 - [x] Initial Release
-- [ ] Rewrite for docker sockets
+- [x] Rewrite for docker sockets
 - [ ] Fully customizable messages for Discord
 - [ ] More statistics
 - [ ] \(Maybe) Auto-Shutdown for certain containers
