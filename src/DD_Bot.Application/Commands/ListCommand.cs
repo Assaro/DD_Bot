@@ -8,10 +8,10 @@ namespace DD_Bot.Application.Commands
 {
     internal class ListCommand
     {
-        private DiscordSocketClient Discord;
+        private DiscordSocketClient _discord;
         public ListCommand(DiscordSocketClient discord)
         {
-            Discord = discord;
+            _discord = discord;
         }
 
         #region CreateCommand
@@ -34,7 +34,7 @@ namespace DD_Bot.Application.Commands
             await arg.RespondAsync("Contacting Docker Service...");
             await dockerService.DockerUpdate();
 
-            if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
+            if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id) && !settings.AdminIDs.Contains(arg.User.Id))
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to use this command");
                 return;
@@ -55,10 +55,10 @@ namespace DD_Bot.Application.Commands
                 + "\n";
             foreach (var item in dockerService.DockerStatus)
             {
-                if (settings.AllowedContainers.Contains(item.Name) || settings.AdminIDs.Contains(arg.User.Id))
+                if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
                 {
-                    output = output + "|" + item.Name + new string(' ', maxlength - item.Name.Length);
-                    if (item.Running)
+                    output = output + "|" + item.Names[0] + new string(' ', maxlength - item.Names[0].Length);
+                    if (item.Status.Contains("Up"))
                     {
                         output = output + "| Running |\n";
                     }
@@ -70,7 +70,6 @@ namespace DD_Bot.Application.Commands
             }
             output = output + new string('¯', 12 + maxlength) + "\n" + "```";
             await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
-            return;
         }
 
         #endregion

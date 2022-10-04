@@ -6,11 +6,11 @@ namespace DD_Bot.Application.Commands
     public class TestCommand
     {
 
-        private DiscordSocketClient Discord;
+        private DiscordSocketClient _discord;
 
         public TestCommand(DiscordSocketClient discord)
         {
-            Discord = discord;
+            _discord = discord;
         }
 
         #region CreateCommand

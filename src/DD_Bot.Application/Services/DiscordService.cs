@@ -12,32 +12,33 @@ namespace DD_Bot.Application.Services
 {
     public class DiscordService : IDiscordService
     {
-        private IConfigurationRoot Configuration;
-        private IServiceProvider ServiceProvider;
-        private DiscordSocketClient DiscordClient;
+        private readonly IConfigurationRoot _configuration;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly DiscordSocketClient _discordClient;
 
-        public DiscordService(IConfigurationRoot configuration, IServiceProvider serviceProvider)//Discord Initialisierung
+        public DiscordService(IConfigurationRoot configuration, IServiceProvider serviceProvider)//Discord Initialising
         {
-            Configuration = configuration;
-            ServiceProvider = serviceProvider;
-            DiscordClient = new DiscordSocketClient();
+            _configuration = configuration;
+            _serviceProvider = serviceProvider;
+            _discordClient = new DiscordSocketClient();
         }
 
-        public DiscordSettings Setting => Configuration.Get<Settings>().DiscordSettings;
+        private DiscordSettings Setting => _configuration.Get<Settings>().DiscordSettings;
 
-        public DockerService Docker => ServiceProvider.GetRequiredService<IDockerService>() as DockerService;
+        private DockerService Docker => _serviceProvider.GetRequiredService<IDockerService>() as DockerService;
 
         public void Start() //Discord Start
         {
-            DiscordClient.Log += DiscordClient_Log;
-            DiscordClient.MessageReceived += DiscordClient_MessageReceived;
-            DiscordClient.GuildAvailable += DiscordClient_GuildAvailable;
-            DiscordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
-            DiscordClient.LoginAsync(Discord.TokenType.Bot, Setting.Token);
-            DiscordClient.StartAsync();
+            _discordClient.Log += DiscordClient_Log;
+            _discordClient.MessageReceived += DiscordClient_MessageReceived;
+            _discordClient.GuildAvailable += DiscordClient_GuildAvailable;
+            _discordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
+            _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.Token);
+            _discordClient.StartAsync();
 
             while (true)
                 Thread.Sleep(1000);
+            // ReSharper disable once FunctionNeverReturns
         }
 
         private Task DiscordClient_SlashCommandExecuted(SocketSlashCommand arg)

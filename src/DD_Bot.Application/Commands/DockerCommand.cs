@@ -1,18 +1,20 @@
-﻿using Discord;
+﻿using System;
+using Discord;
 using Discord.WebSocket;
 using DD_Bot.Application.Services;
 using System.Linq;
+using System.Threading;
 using DD_Bot.Domain;
 
 namespace DD_Bot.Application.Commands
 {
     public class DockerCommand
     {
-        private DiscordSocketClient Discord;
+        private DiscordSocketClient _discord;
 
         public DockerCommand(DiscordSocketClient discord)
         {
-            Discord=discord;
+            _discord=discord;
         }
 
         #region CreateCommand
@@ -34,7 +36,7 @@ namespace DD_Bot.Application.Commands
                 ApplicationCommandOptionType.String, 
                 "choose a command", 
                 true, 
-                choices: new ApplicationCommandOptionChoiceProperties[]
+                choices: new[]
                 {
                     new ApplicationCommandOptionChoiceProperties()
                     {
@@ -63,14 +65,15 @@ namespace DD_Bot.Application.Commands
         public static async void Execute(SocketSlashCommand arg, DockerService dockerService, DiscordSettings settings)
         {
             await arg.RespondAsync("Contacting Docker Service...");
-
+            await dockerService.DockerUpdate();
+            
             var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
 
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
             #region authCheck
 
-            if (!settings.AdminIDs.Contains(arg.User.Id)) //Überprüft Berechtigungen
+            if (!settings.AdminIDs.Contains(arg.User.Id)) //Auth Checks
             {
                 if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
                 {
@@ -99,13 +102,16 @@ namespace DD_Bot.Application.Commands
                 return;
             }
 
-            var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Name == dockerName);
+
+            var docker = dockerService.DockerStatus.FirstOrDefault(docker => docker.Names[0] == dockerName);
 
             if (docker == null) //Schaut ob gesuchter Docker Existiert
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "Docker doesnt exist");
                 return;
             }
+
+            var dockerId = docker.ID;
 
             switch (command)
             {
@@ -126,7 +132,23 @@ namespace DD_Bot.Application.Commands
                     break;
             }
 
-            await dockerService.DockerCommand(command + " ", dockerName);
+            switch (command)
+            {
+               case "start":
+                   dockerService.DockerCommandStart(dockerId);
+                    break;
+               case "stop":
+                   dockerService.DockerCommandStop(dockerId);
+                    break;
+               case "restart":
+                   dockerService.DockerCommandRestart(dockerId);
+                    break;
+            }
+
+            await arg.ModifyOriginalResponseAsync(edit =>
+                edit.Content = arg.User.Mention + " Command has been sent. Awaiting response");
+            
+            Thread.Sleep(TimeSpan.FromSeconds(5));
             await dockerService.DockerUpdate();
 
             switch (command)
@@ -150,7 +172,9 @@ namespace DD_Bot.Application.Commands
                     }
                     else
                     {
+
                         await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " " + dockerName +  " could not be stopped");
+
                         return;
                     }
                 case "restart":

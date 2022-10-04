@@ -5,89 +5,58 @@ using System.Threading.Tasks;
 using DD_Bot.Application.Interfaces;
 using DD_Bot.Domain;
 using Microsoft.Extensions.Configuration;
-using Renci.SshNet;
+using Docker.DotNet;
+using Docker.DotNet.Models;
 using Timer = System.Timers.Timer;
 
 namespace DD_Bot.Application.Services
 {
     public class DockerService : IDockerService
     {
-        private IConfigurationRoot Configuration;
-        public Timer UpdateTimer;
-        public List<DockerContainer> DockerStatus { get; }
-
-        private readonly string updateCommand = "docker ps -a --format \"{{.Names}}\\t{{.State}}\"";
-        public SshSettings Setting => Configuration.Get<Settings>().SshSettings;
-
-        public DockerService(IConfigurationRoot configuration) // Initialisierung
+        private readonly IConfigurationRoot _configuration;
+        private IList<ContainerListResponse> _dockerResponse;
+        public List<ContainerListResponse> DockerStatus { get; private set; }
+        private readonly DockerClient _client = new DockerClientConfiguration(
+                new Uri("unix:///var/run/docker.sock"))
+            .CreateClient();
+        
+        private DockerSettings Setting => _configuration.Get<Settings>().SshSettings;
+        
+        public DockerService(IConfigurationRoot configuration) // Initialising
         {
-            Configuration = configuration;
-            DockerStatus = new List<DockerContainer>();
+            _configuration = configuration;
             DockerUpdate();
-            UpdateTimer = new Timer();
-            UpdateTimer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
-            UpdateTimer.Elapsed += (s, e) => DockerUpdate();
-            UpdateTimer.AutoReset = true;
-            UpdateTimer.Start();
+            var updateTimer = new Timer();
+            updateTimer.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
+            updateTimer.Elapsed += (s, e) => DockerUpdate();
+            updateTimer.AutoReset = true;
+            updateTimer.Start();
         }
 
-        public string[] RunningDockers => DockerStatus.Where(docker => docker.Running).Select(pairs => pairs.Name).ToArray();
-        public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Running).Select(pairs => pairs.Name).ToArray();
-
-        public async Task DockerUpdate() //Update der Liste via SSH
+     public string[] RunningDockers => DockerStatus.Where(docker => docker.Status.Contains("Up")).Select(pairs => pairs.Names[0]).ToArray();
+     public string[] StoppedDockers => DockerStatus.Where(docker => !docker.Status.Contains("Up")).Select(pairs => pairs.Names[0]).ToArray();
+     
+        public async Task DockerUpdate() //Update
         {
-            string result;
-            using (var client = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword))
+            _dockerResponse = await _client.Containers.ListContainersAsync(new ContainersListParameters(){All = true});
+            DockerStatus = new List<ContainerListResponse>();
+            foreach (var variable in _dockerResponse)
             {
-                client.Connect();
-                result = client.RunCommand(updateCommand).Result;
-                client.Disconnect();
+                DockerStatus.Add(variable);
             }
 
-            DockerContainerUpdate(result);
-            DockerContainerSort();
-            Console.WriteLine("["+ DateTime.Now.ToLongTimeString() +"] Updated Status");
-            return;
-        }
-
-        public void DockerContainerUpdate(string sshData) 
-        {
-            string[] lines = sshData.Split('\n');
-            foreach (string line in lines)
+            if (DockerStatus == null) return;
             {
-                if (string.IsNullOrEmpty(line)) continue;
-
-                string[] parts = line.Split('\t');
-
-                bool status = false;
-                if (parts[1] == "running")
-                { 
-                    status = true;
-                }
-                var docker = DockerStatus.FirstOrDefault(docker => docker.Name == parts[0]);
-                if (docker == null)
+                foreach (var variable in DockerStatus)
                 {
-                    DockerStatus.Add(new DockerContainer(parts[0], status));
-                }
-                else
-                {
-                    docker.Running = status;
-                }
-                
-            }
-
-            foreach (var item in DockerStatus)
-            {
-                if (!sshData.Contains(item.Name))
-                {
-                    DockerStatus.Remove(item);
+                    variable.Names[0] = variable.Names[0].Substring(1);
                 }
             }
         }
 
         public void DockerContainerSort()
         {
-            DockerStatus.Sort((x,y)=>x.Name.CompareTo(y.Name));
+            DockerStatus.Sort((x,y)=>String.Compare(x.Names[0], y.Names[0], StringComparison.Ordinal));
         }
 
         public int DockerStatusLongestName()
@@ -95,28 +64,32 @@ namespace DD_Bot.Application.Services
             int counter = 0;
             foreach (var item in DockerStatus)
             {
-                if (item.Name.Length> counter)
+                if (item.Names[0].Length> counter)
                 {
-                    counter = item.Name.Length;
+                    counter = item.Names[0].Length;
                 }
             }
             return counter;
         }
 
-        public void Start()
+        public async void DockerCommandStart(string id)
         {
-            Console.WriteLine("DockerService startet");
+            await _client.Containers.StartContainerAsync(id, new ContainerStartParameters());
         }
 
-        public async Task DockerCommand(string commandName, string dockerName) //ausführen eines Befehls über SSH
+        public async void DockerCommandStop(string id)
         {
-            using( var client = new SshClient(Setting.ServerIp, Setting.SshPort, Setting.SshUser, Setting.SshPassword))
-            {
-                client.Connect();
-                client.RunCommand(string.Format("docker " +commandName + dockerName));
-                client.Disconnect();
-            }
-            return;
+            await _client.Containers.StopContainerAsync(id, new ContainerStopParameters());
+        }
+
+        public async void DockerCommandRestart(string id)
+        {
+            await _client.Containers.RestartContainerAsync(id, new ContainerRestartParameters());
+        }
+        
+        public void Start()
+        {
+            Console.WriteLine("DockerService started");
         }
     }
 }
