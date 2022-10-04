@@ -3,8 +3,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 COPY publish/ /app/
 # allow all users access to this so we can run container as non root.
 RUN chmod -R 775 /app
-RUN useradd -u 99 -g 100 dockeruser
-USER dockeruser
+USER root
 
 WORKDIR /app/
 
