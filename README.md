@@ -1,6 +1,6 @@
 <h1 align="center">DD_Bot</h1>
 
-<p align="center">A Discord-Bot to start and stop Docker Containers, using SSH</p>
+<p align="center">A Discord-Bot to start and stop Docker Containers, using the Docker Socket</p>
 
 <p align="center">
 <img alt="Docker Image Size (tag)" src="https://img.shields.io/docker/image-size/assaro/ddbot/latest?style=for-the-badge">
@@ -23,7 +23,7 @@
     - Save Energy when noone is playing
 - DD_Bot is designed to work on the same machine in its own Container
 - Easy configuration through a single json file
-- Built using [Discord.NET](https://github.com/discord-net/Discord.Net) and [SSH.NET](https://github.com/sshnet/SSH.NET)
+- Built using [Discord.NET](https://github.com/discord-net/Discord.Net) and [Docker.DotNet](https://github.com/dotnet/Docker.DotNet)
 
 ## Requirements
 
@@ -40,7 +40,7 @@
 ## To-Do List
 
 - [x] Initial Release
-- [ ] Rewrite for docker sockets
+- [x] Rewrite for docker sockets
 - [ ] Fully customizable messages for Discord
 - [ ] More statistics
 - [ ] \(Maybe) Auto-Shutdown for certain containers
