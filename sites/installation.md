@@ -4,7 +4,7 @@
 2. Install [Docker](https://www.docker.com/get-started/)
 3. Pull DD_Bot Image using `docker pull assaro/ddbot`
 4. Start image using `docker run -d --name='DD_Bot'  -v 'path/to/settings':'/app/settings/':'rw' -v /var/run/docker.sock:/var/run/docker.sock 'assaro/ddbot:latest' `
-    - For Unraid, please refer to [this Screenshot](/pics/Unraidsettings.png)
+    - For Unraid, please refer to [this Screenshot](/pics/Unraidsettings.PNG)
 5. The Container will generate a settings file in your set directory
 6. Stop the Container, input your settings and then start it again. [Click for info about settings](/sites/settings.md)
     - Everything but the Discord Token can be changed while the container is running
