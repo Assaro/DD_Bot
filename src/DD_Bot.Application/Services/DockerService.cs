@@ -19,9 +19,8 @@ namespace DD_Bot.Application.Services
         private readonly DockerClient _client = new DockerClientConfiguration(
                 new Uri("unix:///var/run/docker.sock"))
             .CreateClient();
-        
-        private DockerSettings Setting => _configuration.Get<Settings>().DockerSettings;
-        
+
+        public DockerSettings Settings => _configuration.Get<Settings>().DockerSettings;
         public DockerService(IConfigurationRoot configuration) // Initialising
         {
             _configuration = configuration;
