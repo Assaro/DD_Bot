@@ -1,6 +1,12 @@
 <h1 align="center">FAQ</h1>
 <p align="center">If you are here, I probably did something wrong</p>
 
+## The Bot does not go online in Discord
+
+- Token is not valid
+    - Check if you entered your token correctly in the settings.json
+    - Restart the Container for Changes to take effect
+
 ## The Container crashes
 
 - Check if the Container generated a settings.json
