@@ -15,3 +15,5 @@
     - AllowedContainers: List of Containers that will be listed and controllable for normal Users. **Case-Sensitive!!** Whitelist still applies
 - DockerSettings
     - BotName: The Name you gave this Container. Prevents shutting down itself
+    - Retries: The Amount of checks that should be performed before a command is considered failed
+    - TimeBeforeRetry: The Time between two checks in seconds
