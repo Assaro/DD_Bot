@@ -146,9 +146,49 @@ namespace DD_Bot.Application.Commands
             }
 
             await arg.ModifyOriginalResponseAsync(edit =>
-                edit.Content = "Command has been sent. Awaiting response");
+                edit.Content = "Command has been sent. Awaiting response. This will take up to " + dockerService.Settings.Retries * dockerService.Settings.TimeBeforeRetry + " Seconds.");
+
+            for (int i = 0; i < dockerService.Settings.Retries; i++)
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(dockerService.Settings.TimeBeforeRetry));
+                await dockerService.DockerUpdate();
+                
+                switch (command)
+                {
+                    case "start":
+                        if (dockerService.RunningDockers.Contains(dockerName))
+                        {
+                            await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention+ " " + dockerName + " has been started");
+                            return;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    case "stop":
+                        if (dockerService.StoppedDockers.Contains(dockerName))
+                        {
+                            await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " " + dockerName + " has been stopped");
+                            return;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    case "restart":
+                        if (dockerService.RunningDockers.Contains(dockerName))
+                        {
+                            await arg.ModifyOriginalResponseAsync(edit => edit.Content = arg.User.Mention + " " + dockerName +  " has been restarted");
+                            return;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                }
+            }
             
-            Thread.Sleep(TimeSpan.FromSeconds(5));
+            
             await dockerService.DockerUpdate();
 
             switch (command)
