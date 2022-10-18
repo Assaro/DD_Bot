@@ -5,6 +5,8 @@ using System.IO;
 using DD_Bot.Application.Providers;
 using DD_Bot.Application.Interfaces;
 using DD_Bot.Application.Services;
+using DD_Bot.Domain;
+using Newtonsoft.Json;
 
 #region CreateSettingsFiles
 var settingsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "settings");
@@ -37,6 +39,8 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(),"settings"))
     .AddJsonFile("settings.json", false ,true)
     .Build();
+
+File.WriteAllText(settingsFile, JsonConvert.SerializeObject(configuration.Get<Settings>(), Formatting.Indented));
 
 //string languageJson = string.Format(configuration.Get<Settings>().LanguageSettings.Language + ".json");
 
