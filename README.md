@@ -39,8 +39,10 @@
 
 ## To-Do List
 
-- [x] Initial Release
+- [x] Initial release
 - [x] Rewrite for docker sockets
+- [x] Auto-updates for the settings.json Files
+- [ ] Commands to grant and revoke privileges to users and groups
 - [ ] Fully customizable messages for Discord
 - [ ] More statistics
 - [ ] \(Maybe) Auto-Shutdown for certain containers
