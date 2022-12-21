@@ -53,10 +53,14 @@ namespace DD_Bot.Application.Commands
             await arg.RespondAsync("Contacting Docker Service...");
             await dockerService.DockerUpdate();
 
-            if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id) && !settings.AdminIDs.Contains(arg.User.Id))
+            if (!settings.AdminIDs.Contains(arg.User.Id))
             {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to use this command");
-                return;
+                if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
+                {
+                    await arg.ModifyOriginalResponseAsync(edit =>
+                        edit.Content = "You are not allowed to use this command");
+                    return;
+                }
             }
 
             int maxlength = dockerService.DockerStatusLongestName();
