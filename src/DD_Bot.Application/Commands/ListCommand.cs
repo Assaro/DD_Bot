@@ -72,8 +72,7 @@ namespace DD_Bot.Application.Commands
             {
                 maxLength = 14;
             }
-            string outputHeader = "**List of all known Containers**\n```\n"
-                            + new string('¯', 12 + maxLength)
+            string outputHeader = new string('¯', 12 + maxLength)
                             + "\n|Containername"
                             + new string(' ', maxLength - 13)
                             + "| Status  |\n"
@@ -109,7 +108,8 @@ namespace DD_Bot.Application.Commands
                         }
                     }
 
-                    output = outputHeader + outputList + outputFooter;
+                    int n = i + 1;
+                    output = $"**List of all known Containers ({n}/{partitionedContainerList.Count})**\n```\n" +  outputHeader + outputList + outputFooter;
                     
                     if (i == 0)
                     {
@@ -143,7 +143,7 @@ namespace DD_Bot.Application.Commands
                         }
                     }
                 }
-                string output = outputHeader + outputList + outputFooter;
+                string output = "**List of all known Containers**\n```\n" + outputHeader + outputList + outputFooter;
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
             }
         }
