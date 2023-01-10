@@ -19,6 +19,9 @@
     - Back up your settings.json and let the Container generate a new one
         - This will be changed at some point, sorry for the Inconvenience
 
+## I get ``` Unhandled exception. Discord.Net.HttpException: The server responded with error 50035: Invalid Form Body ``` when using the /list command
+- Too many characters in your list. Lower the ContainersPerList setting value until it works again
+
 ## How can i contact you
 - [Github Issue](https://github.com/Assaro/DD_Bot/issues/new)
 - [Discord](https://discord.com/users/341195755677286401) (Assaro Delamar#5823)
