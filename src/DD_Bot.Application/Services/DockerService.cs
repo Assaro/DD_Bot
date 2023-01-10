@@ -62,7 +62,7 @@ namespace DD_Bot.Application.Services
             {
                 DockerStatus.Add(variable);
             }
-
+            
             if (DockerStatus == null) return;
             {
                 foreach (var variable in DockerStatus)
@@ -70,9 +70,10 @@ namespace DD_Bot.Application.Services
                     variable.Names[0] = variable.Names[0].Substring(1);
                 }
             }
+            DockerContainerSort();
         }
 
-        public void DockerContainerSort()
+        private void DockerContainerSort()
         {
             DockerStatus.Sort((x,y)=>String.Compare(x.Names[0], y.Names[0], StringComparison.Ordinal));
         }

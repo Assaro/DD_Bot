@@ -17,11 +17,14 @@
 
 */
 
+using System;
+using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
 using DD_Bot.Application.Services;
 using DD_Bot.Domain;
 using System.Linq;
+using Docker.DotNet.Models;
 
 namespace DD_Bot.Application.Commands
 {
@@ -53,42 +56,96 @@ namespace DD_Bot.Application.Commands
             await arg.RespondAsync("Contacting Docker Service...");
             await dockerService.DockerUpdate();
 
-            if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id) && !settings.AdminIDs.Contains(arg.User.Id))
+            if (!settings.AdminIDs.Contains(arg.User.Id))
             {
-                await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to use this command");
-                return;
-            }
-
-            int maxlength = dockerService.DockerStatusLongestName();
-            maxlength++;
-            if (maxlength< 14)
-            {
-                maxlength = 14;
-            }
-            string output = "**List of all known Containers**\n```\n"
-                + new string('¯', 12 + maxlength)
-                + "\n|Containername"
-                + new string(' ', maxlength - 13)
-                + "| Status  |\n"
-                + new string('¯', 12 + maxlength)
-                + "\n";
-            foreach (var item in dockerService.DockerStatus)
-            {
-                if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
+                if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
                 {
-                    output = output + "|" + item.Names[0] + new string(' ', maxlength - item.Names[0].Length);
-                    if (item.Status.Contains("Up"))
+                    await arg.ModifyOriginalResponseAsync(edit =>
+                        edit.Content = "You are not allowed to use this command");
+                    return;
+                }
+            }
+            
+            int maxLength = dockerService.DockerStatusLongestName();
+            maxLength++;
+            if (maxLength< 14)
+            {
+                maxLength = 14;
+            }
+            string outputHeader = new string('¯', 12 + maxLength)
+                            + "\n|Containername"
+                            + new string(' ', maxLength - 13)
+                            + "| Status  |\n"
+                            + new string('¯', 12 + maxLength)
+                            + "\n";
+            
+            string outputFooter = new string('¯', 12 + maxLength) + "\n" + "```";
+            
+            if (dockerService.DockerStatus.Count > dockerService.Settings.ContainersPerMessage)
+            {
+                string output;
+                string outputList;
+                List < List < ContainerListResponse >> partitionedContainerList =
+                    dockerService.DockerStatus.Partition(dockerService.Settings.ContainersPerMessage);
+                for (int i = 0; i < partitionedContainerList.Count; i++)
+                {
+                    output = String.Empty;
+                    outputList = String.Empty;
+                    
+                    foreach (var item in partitionedContainerList[i])
                     {
-                        output = output + "| Running |\n";
+                        if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
+                        {
+                            outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
+                            if (item.Status.Contains("Up"))
+                            {
+                                outputList = outputList + "| Running |\n";
+                            }
+                            else
+                            {
+                                outputList = outputList + "| Stopped |\n";
+                            }
+                        }
+                    }
+
+                    int n = i + 1;
+                    output = $"**List of all known Containers ({n}/{partitionedContainerList.Count})**\n```\n" +  outputHeader + outputList + outputFooter;
+                    
+                    if (i == 0)
+                    {
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content =output);
                     }
                     else
                     {
-                        output = output + "| Stopped |\n";
+                        await arg.Channel.SendMessageAsync(output);
                     }
                 }
+
+
+
+                //arg.Channel.SendMessageAsync("");
             }
-            output = output + new string('¯', 12 + maxlength) + "\n" + "```";
-            await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
+            else
+            {
+                string outputList = String.Empty;
+                foreach (var item in dockerService.DockerStatus)
+                {
+                    if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
+                    {
+                        outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
+                        if (item.Status.Contains("Up"))
+                        {
+                            outputList = outputList + "| Running |\n";
+                        }
+                        else
+                        {
+                            outputList = outputList + "| Stopped |\n";
+                        }
+                    }
+                }
+                string output = "**List of all known Containers**\n```\n" + outputHeader + outputList + outputFooter;
+                await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
+            }
         }
 
         #endregion
