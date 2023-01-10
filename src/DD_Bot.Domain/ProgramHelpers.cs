@@ -1,4 +1,4 @@
-﻿/* DD_Bot - A Discord Bot to control Docker containers*/
+/* DD_Bot - A Discord Bot to control Docker containers*/
 
 /*  Copyright (C) 2022 Maxim Kovac
 
@@ -17,14 +17,19 @@
 
 */
 
-namespace DD_Bot.Domain
-{
-    public class DockerSettings 
-    {
-        public string BotName { get; set; } = "DD_Bot";
-        public int Retries { get; set; } = 6;
-        public int TimeBeforeRetry { get; set; } = 5;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
-        public int ContainersPerList { get; set; } = 30;
+namespace DD_Bot.Domain;
+
+public static class ProgramHelpers
+{
+    public static List<List<T>> Partition<T>(this List<T> values, int chunkSize)
+    {
+        return values.Select((x, i) => new { Index = i, Value = x })
+            .GroupBy(x => x.Index / chunkSize)
+            .Select(x => x.Select(v => v.Value).ToList())
+            .ToList();
     }
 }

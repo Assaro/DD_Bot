@@ -17,11 +17,14 @@
 
 */
 
+using System;
+using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
 using DD_Bot.Application.Services;
 using DD_Bot.Domain;
 using System.Linq;
+using Docker.DotNet.Models;
 
 namespace DD_Bot.Application.Commands
 {
@@ -62,37 +65,87 @@ namespace DD_Bot.Application.Commands
                     return;
                 }
             }
-
-            int maxlength = dockerService.DockerStatusLongestName();
-            maxlength++;
-            if (maxlength< 14)
+            
+            int maxLength = dockerService.DockerStatusLongestName();
+            maxLength++;
+            if (maxLength< 14)
             {
-                maxlength = 14;
+                maxLength = 14;
             }
-            string output = "**List of all known Containers**\n```\n"
-                + new string('¯', 12 + maxlength)
-                + "\n|Containername"
-                + new string(' ', maxlength - 13)
-                + "| Status  |\n"
-                + new string('¯', 12 + maxlength)
-                + "\n";
-            foreach (var item in dockerService.DockerStatus)
+            string outputHeader = "**List of all known Containers**\n```\n"
+                            + new string('¯', 12 + maxLength)
+                            + "\n|Containername"
+                            + new string(' ', maxLength - 13)
+                            + "| Status  |\n"
+                            + new string('¯', 12 + maxLength)
+                            + "\n";
+            
+            string outputFooter = new string('¯', 12 + maxLength) + "\n" + "```";
+            
+            if (dockerService.DockerStatus.Count > dockerService.Settings.ContainersPerList)
             {
-                if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
+                string output;
+                string outputList;
+                List < List < ContainerListResponse >> partitionedContainerList =
+                    dockerService.DockerStatus.Partition(dockerService.Settings.ContainersPerList);
+                for (int i = 0; i < partitionedContainerList.Count; i++)
                 {
-                    output = output + "|" + item.Names[0] + new string(' ', maxlength - item.Names[0].Length);
-                    if (item.Status.Contains("Up"))
+                    output = String.Empty;
+                    outputList = String.Empty;
+                    
+                    foreach (var item in partitionedContainerList[i])
                     {
-                        output = output + "| Running |\n";
+                        if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
+                        {
+                            outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
+                            if (item.Status.Contains("Up"))
+                            {
+                                outputList = outputList + "| Running |\n";
+                            }
+                            else
+                            {
+                                outputList = outputList + "| Stopped |\n";
+                            }
+                        }
+                    }
+
+                    output = outputHeader + outputList + outputFooter;
+                    
+                    if (i == 0)
+                    {
+                        await arg.ModifyOriginalResponseAsync(edit => edit.Content =output);
                     }
                     else
                     {
-                        output = output + "| Stopped |\n";
+                        await arg.Channel.SendMessageAsync(output);
                     }
                 }
+
+
+
+                //arg.Channel.SendMessageAsync("");
             }
-            output = output + new string('¯', 12 + maxlength) + "\n" + "```";
-            await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
+            else
+            {
+                string outputList = String.Empty;
+                foreach (var item in dockerService.DockerStatus)
+                {
+                    if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
+                    {
+                        outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
+                        if (item.Status.Contains("Up"))
+                        {
+                            outputList = outputList + "| Running |\n";
+                        }
+                        else
+                        {
+                            outputList = outputList + "| Stopped |\n";
+                        }
+                    }
+                }
+                string output = outputHeader + outputList + outputFooter;
+                await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
+            }
         }
 
         #endregion
