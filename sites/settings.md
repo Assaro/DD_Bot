@@ -17,4 +17,4 @@
     - BotName: The Name you gave this Container. Prevents shutting down itself
     - Retries: The Amount of checks that should be performed before a command is considered failed
     - TimeBeforeRetry: The Time between two checks in seconds
-    - ContainersPerList: Splits the list into multiple messages if more containers are found. Lower it to prevent Error 50035
+    - ContainersPerMessage: Splits the list into multiple messages if more containers are found. Lower it to prevent Error 50035

@@ -82,12 +82,12 @@ namespace DD_Bot.Application.Commands
             
             string outputFooter = new string('¯', 12 + maxLength) + "\n" + "```";
             
-            if (dockerService.DockerStatus.Count > dockerService.Settings.ContainersPerList)
+            if (dockerService.DockerStatus.Count > dockerService.Settings.ContainersPerMessage)
             {
                 string output;
                 string outputList;
                 List < List < ContainerListResponse >> partitionedContainerList =
-                    dockerService.DockerStatus.Partition(dockerService.Settings.ContainersPerList);
+                    dockerService.DockerStatus.Partition(dockerService.Settings.ContainersPerMessage);
                 for (int i = 0; i < partitionedContainerList.Count; i++)
                 {
                     output = String.Empty;

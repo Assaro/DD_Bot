@@ -25,6 +25,6 @@ namespace DD_Bot.Domain
         public int Retries { get; set; } = 6;
         public int TimeBeforeRetry { get; set; } = 5;
 
-        public int ContainersPerList { get; set; } = 30;
+        public int ContainersPerMessage { get; set; } = 30;
     }
 }
