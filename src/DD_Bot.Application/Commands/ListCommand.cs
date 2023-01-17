@@ -90,23 +90,7 @@ namespace DD_Bot.Application.Commands
                 for (int i = 0; i < partitionedContainerList.Count; i++)
                 {
                     output = String.Empty;
-                    outputList = String.Empty;
-                    
-                    foreach (var item in partitionedContainerList[i])
-                    {
-                        if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
-                        {
-                            outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
-                            if (item.Status.Contains("Up"))
-                            {
-                                outputList = outputList + "| Running |\n";
-                            }
-                            else
-                            {
-                                outputList = outputList + "| Stopped |\n";
-                            }
-                        }
-                    }
+                    outputList = FormatListObjects(partitionedContainerList[i], settings, maxLength, arg);
 
                     int n = i + 1;
                     output = $"**List of all known Containers ({n}/{partitionedContainerList.Count})**\n```\n" +  outputHeader + outputList + outputFooter;
@@ -127,25 +111,32 @@ namespace DD_Bot.Application.Commands
             }
             else
             {
-                string outputList = String.Empty;
-                foreach (var item in dockerService.DockerStatus)
-                {
-                    if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
-                    {
-                        outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
-                        if (item.Status.Contains("Up"))
-                        {
-                            outputList = outputList + "| Running |\n";
-                        }
-                        else
-                        {
-                            outputList = outputList + "| Stopped |\n";
-                        }
-                    }
-                }
+                string outputList = FormatListObjects(dockerService.DockerStatus, settings, maxLength, arg);
                 string output = "**List of all known Containers**\n```\n" + outputHeader + outputList + outputFooter;
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = output);
             }
+        }
+
+        private static string FormatListObjects(List<ContainerListResponse> list, DiscordSettings settings, int maxLength, SocketSlashCommand arg)
+        {
+            string outputList = String.Empty;
+            foreach (var item in list)
+            {
+                if (settings.AllowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
+                {
+                    outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
+                    if (item.Status.Contains("Up"))
+                    {
+                        outputList = outputList + "| Running |\n";
+                    }
+                    else
+                    {
+                        outputList = outputList + "| Stopped |\n";
+                    }
+                }
+            }
+
+            return outputList;
         }
 
         #endregion
