@@ -42,17 +42,18 @@ namespace DD_Bot.Application.Services
             _discordClient = new DiscordSocketClient();
         }
 
-        private DiscordSettings Setting => _configuration.Get<Settings>().DiscordSettings;
+        private Settings Setting => _configuration.Get<Settings>();
 
         private DockerService Docker => _serviceProvider.GetRequiredService<IDockerService>() as DockerService;
-
+        private SettingsService SettingService => _serviceProvider.GetRequiredService<ISettingsService>() as SettingsService;
+        
         public void Start() //Discord Start
         {
             _discordClient.Log += DiscordClient_Log;
             _discordClient.MessageReceived += DiscordClient_MessageReceived;
             _discordClient.GuildAvailable += DiscordClient_GuildAvailable;
             _discordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
-            _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.Token);
+            _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.DiscordSettings.Token);
             _discordClient.StartAsync();
 
             while (true)
@@ -69,11 +70,14 @@ namespace DD_Bot.Application.Services
                     return Task.CompletedTask;
 
                 case "docker":
-                        DockerCommand.Execute(arg, Docker, Setting);
+                        DockerCommand.Execute(arg, Docker, Setting.DiscordSettings);
                     return Task.CompletedTask;
 
                 case "list":
-                    ListCommand.Execute(arg, Docker, Setting);
+                    ListCommand.Execute(arg, Docker, Setting.DiscordSettings);
+                    return Task.CompletedTask;
+                case "admin":
+                    AdminCommand.Execute(arg, Setting, SettingService);
                     return Task.CompletedTask;
             }
             return Task.CompletedTask;
@@ -84,6 +88,7 @@ namespace DD_Bot.Application.Services
             await arg.CreateApplicationCommandAsync(TestCommand.Create());
             await arg.CreateApplicationCommandAsync(DockerCommand.Create());
             await arg.CreateApplicationCommandAsync(ListCommand.Create());
+            await arg.CreateApplicationCommandAsync(AdminCommand.Create());
         }
 
         private Task DiscordClient_MessageReceived(SocketMessage arg)

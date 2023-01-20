@@ -74,14 +74,19 @@ File.WriteAllText(settingsFile, JsonConvert.SerializeObject(configuration.Get<Se
 
 var serviceProvider = new ServiceCollection()
     .AddScoped(_ => configuration)
+    .AddScoped(_=> settingsFile)
     .AddSingleton<IDiscordService, DiscordService>()
     .AddSingleton<IDockerService, DockerService>()
+    .AddSingleton<ISettingsService, SettingsService>()
     .BuildServiceProvider();
 
 
 var dockerService = serviceProvider.GetRequiredService<IDockerService>() as DockerService;
 if (dockerService == null) throw new ArgumentNullException(nameof(dockerService));
+var settingsService = serviceProvider.GetRequiredService<ISettingsService>() as SettingsService;
+if (settingsService == null) throw new ArgumentNullException(nameof(settingsService));
 var discordBot = serviceProvider.GetRequiredService<IDiscordService>() as DiscordService;
 if (discordBot == null) throw new ArgumentNullException(nameof(discordBot));
 discordBot.Start();
 dockerService.Start();
+settingsService.Start();

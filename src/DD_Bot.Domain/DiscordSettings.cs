@@ -17,15 +17,24 @@
 
 */
 
+using System.Collections.Generic;
+
 namespace DD_Bot.Domain
 {
     public class DiscordSettings
     {
         public string Token { get; set; } = "<- Please Insert Token here! ->";
-        public ulong[] AdminIDs { get; set; } = System.Array.Empty<ulong>();
+        public List<ulong> AdminIDs { get; set; } = new List<ulong>();
         public bool UserWhitelist { get; set; } = true;
+        //old settings
         public ulong[] UserIDs { get; set; } = System.Array.Empty<ulong>();
         public bool UsersCanStopContainers { get; set; } = false;
         public string[] AllowedContainers { get; set; } = System.Array.Empty<string>();
+        
+        //new settings
+        public Dictionary<ulong, List<string>> RoleStartPermissions { get; set; } = new Dictionary<ulong, List<string>>();
+        public Dictionary<ulong, List<string>> RoleStopPermissions { get; set; } = new Dictionary<ulong, List<string>>();
+        public Dictionary<ulong, List<string>> UserStartPermissions { get; set; } = new Dictionary<ulong, List<string>>();
+        public Dictionary<ulong, List<string>> UserStopPermissions { get; set; } = new Dictionary<ulong, List<string>>();
     }
 }

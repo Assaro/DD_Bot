@@ -1,4 +1,4 @@
-﻿/* DD_Bot - A Discord Bot to control Docker containers*/
+/* DD_Bot - A Discord Bot to control Docker containers*/
 
 /*  Copyright (C) 2022 Maxim Kovac
 
@@ -17,16 +17,10 @@
 
 */
 
-using System.IO;
-
-namespace DD_Bot.Domain
+namespace DD_Bot.Application.Interfaces
 {
-    public class Settings
+    public interface ISettingsService
     {
-        public LanguageSettings LanguageSettings { get; set; } = new LanguageSettings();
-        public DiscordSettings DiscordSettings { get; set; } = new DiscordSettings();
-        public DockerSettings DockerSettings { get; set; } = new DockerSettings();
-        
-    }
     
+    }
 }

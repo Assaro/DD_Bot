@@ -87,7 +87,6 @@ namespace DD_Bot.Application.Commands
             await dockerService.DockerUpdate();
             
             var command = arg.Data.Options.FirstOrDefault(option => option.Name == "command")?.Value as string;
-
             var dockerName = arg.Data.Options.FirstOrDefault(option => option.Name == "dockername")?.Value as string;
 
             #region authCheck
