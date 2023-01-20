@@ -91,23 +91,63 @@ namespace DD_Bot.Application.Commands
 
             #region authCheck
 
+            bool authorized = true;
+            
             if (!settings.AdminIDs.Contains(arg.User.Id)) //Auth Checks
             {
-                if (settings.UserWhitelist && !settings.UserIDs.Contains(arg.User.Id))
+                authorized = false;
+                var socketUser = arg.User as SocketGuildUser;
+                var guild = socketUser.Guild;
+                var socketGuildUser = guild.GetUser(socketUser.Id);
+                var userRoles = socketGuildUser.Roles;
+
+                switch (command)
                 {
-                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
-                    return;
+                    case "start":
+                        if (settings.UserStartPermissions.ContainsKey(arg.User.Id))
+                        {
+                            if (settings.UserStartPermissions[arg.User.Id].Contains(dockerName))
+                            {
+                                authorized = true;
+                            }
+                        }
+                        foreach (var role in userRoles)
+                        {
+                            if (settings.RoleStartPermissions.ContainsKey(role.Id))
+                            {
+                                if (settings.RoleStartPermissions[role.Id].Contains(dockerName))
+                                {
+                                    authorized = true;
+                                }
+                            }
+                        }
+                        break;
+                    case "stop":
+                    case "restart":
+                        if (settings.UserStopPermissions.ContainsKey(arg.User.Id))
+                        {
+                            if (settings.UserStopPermissions[arg.User.Id].Contains(dockerName))
+                            {
+                                authorized = true;
+                            }
+                        }
+                        foreach (var role in userRoles)
+                        {
+                            if (settings.RoleStopPermissions.ContainsKey(role.Id))
+                            {
+                                if (settings.RoleStopPermissions[role.Id].Contains(dockerName))
+                                {
+                                    authorized = true;
+                                }
+                            }
+                        }
+                        break;
                 }
 
-                if (!settings.AllowedContainers.Contains(dockerName))
+                if (!authorized)
                 {
-                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to control this docker");
-                    return;
-                }
-
-                if (!settings.UsersCanStopContainers && (command == "stop"|| command == "restart"))
-                {
-                    await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not allowed to stop or restart this docker");
+                    await arg.ModifyOriginalResponseAsync(edit =>
+                        edit.Content = "You are not allowed to use this command");
                     return;
                 }
             }
