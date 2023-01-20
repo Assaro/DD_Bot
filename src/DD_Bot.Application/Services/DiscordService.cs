@@ -79,6 +79,9 @@ namespace DD_Bot.Application.Services
                 case "admin":
                     AdminCommand.Execute(arg, Setting, SettingService);
                     return Task.CompletedTask;
+                case "user":
+                    UserCommand.Execute(arg, Setting, SettingService);
+                    return Task.CompletedTask;
             }
             return Task.CompletedTask;
         }
@@ -89,6 +92,7 @@ namespace DD_Bot.Application.Services
             await arg.CreateApplicationCommandAsync(DockerCommand.Create());
             await arg.CreateApplicationCommandAsync(ListCommand.Create());
             await arg.CreateApplicationCommandAsync(AdminCommand.Create());
+            await arg.CreateApplicationCommandAsync(UserCommand.Create());
         }
 
         private Task DiscordClient_MessageReceived(SocketMessage arg)
