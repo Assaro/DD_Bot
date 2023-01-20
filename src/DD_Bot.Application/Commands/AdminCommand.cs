@@ -18,7 +18,6 @@
 */
 
 using System;
-using System.Diagnostics;
 using Discord;
 using Discord.WebSocket;
 using DD_Bot.Application.Services;
@@ -35,7 +34,7 @@ namespace DD_Bot.Application.Commands
         {
             _discord = discord;
         }
-        
+
         #region CreateCommand
 
         public static ApplicationCommandProperties Create()
@@ -79,12 +78,13 @@ namespace DD_Bot.Application.Commands
 
         public static async void Execute(SocketSlashCommand arg, Settings settings, SettingsService settingsService)
         {
-            await arg.RespondAsync("Contacting Docker Service...");
+            await arg.RespondAsync("Contacting Settings Service...");
             DiscordSettings discordSettings = settings.DiscordSettings;
             if (!discordSettings.AdminIDs.Contains(arg.User.Id))
             {
                 await arg.ModifyOriginalResponseAsync(edit => edit.Content = "You are not an Admin!");
-            }else
+            }
+            else
             {
                 var choice = arg.Data.Options.FirstOrDefault(option => option.Name == "choice")?.Value as string;
                 var user = arg.Data.Options.FirstOrDefault(option => option.Name == "user")?.Value as SocketGuildUser;
