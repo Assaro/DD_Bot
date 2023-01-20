@@ -51,7 +51,7 @@ namespace DD_Bot.Application.Services
         {
             _discordClient.Log += DiscordClient_Log;
             _discordClient.MessageReceived += DiscordClient_MessageReceived;
-            _discordClient.GuildAvailable += DiscordClient_GuildAvailable;
+            //_discordClient.GuildAvailable += DiscordClient_GuildAvailable;
             _discordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
             _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.DiscordSettings.Token);
             _discordClient.StartAsync();
@@ -82,6 +82,9 @@ namespace DD_Bot.Application.Services
                 case "user":
                     UserCommand.Execute(arg, Setting, SettingService);
                     return Task.CompletedTask;
+                case "role":
+                    RoleCommand.Execute(arg, Setting, SettingService);
+                    return Task.CompletedTask;
             }
             return Task.CompletedTask;
         }
@@ -93,6 +96,7 @@ namespace DD_Bot.Application.Services
             await arg.CreateApplicationCommandAsync(ListCommand.Create());
             await arg.CreateApplicationCommandAsync(AdminCommand.Create());
             await arg.CreateApplicationCommandAsync(UserCommand.Create());
+            await arg.CreateApplicationCommandAsync(RoleCommand.Create());
         }
 
         private Task DiscordClient_MessageReceived(SocketMessage arg)
