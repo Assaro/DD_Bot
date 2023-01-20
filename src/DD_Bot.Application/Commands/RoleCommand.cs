@@ -25,14 +25,13 @@ using DD_Bot.Application.Services;
 using System.Linq;
 using DD_Bot.Domain;
 
-
 namespace DD_Bot.Application.Commands
 {
-    public class UserCommand
+    public class RoleCommand
     {
         private DiscordSocketClient _discord;
 
-        public UserCommand(DiscordSocketClient discord)
+        public RoleCommand(DiscordSocketClient discord)
         {
             _discord = discord;
         }
@@ -43,14 +42,14 @@ namespace DD_Bot.Application.Commands
         {
             var builder = new SlashCommandBuilder()
             {
-                Name = "user",
-                Description = "Grant or Revoke User Permissions"
+                Name = "role",
+                Description = "Grant or Revoke Role Permissions"
             };
 
             builder.AddOption(
-                "user",
-                ApplicationCommandOptionType.User,
-                "choose a user",
+                "role",
+                ApplicationCommandOptionType.Role,
+                "choose a role",
                 isRequired: true
             );
 
@@ -96,6 +95,7 @@ namespace DD_Bot.Application.Commands
                         Value = "revoke",
                     }
                 });
+
             return builder.Build();
         }
 
@@ -114,109 +114,107 @@ namespace DD_Bot.Application.Commands
             else
             {
                 var choice = arg.Data.Options.FirstOrDefault(option => option.Name == "choice")?.Value as string;
-                var user = arg.Data.Options.FirstOrDefault(option => option.Name == "user")?.Value as SocketGuildUser;
+                var role = arg.Data.Options.FirstOrDefault(option => option.Name == "role")?.Value as SocketRole;
                 var permission = arg.Data.Options.FirstOrDefault(option => option.Name == "permission")?.Value as string;
                 var container = arg.Data.Options.FirstOrDefault(option => option.Name == "container")?.Value as string;
-                
-                switch (choice)
+
+                switch (permission)
                 {
-                    case "grant":
-                        switch (permission)
+                    case "start":
+                        if (!settings.DiscordSettings.RoleStartPermissions.ContainsKey(role.Id))
                         {
-                            case "start":
-                                if (!settings.DiscordSettings.UserStartPermissions.ContainsKey(user.Id))
-                                {
-                                    settings.DiscordSettings.UserStartPermissions.Add(user.Id, new List<string>());
-                                }
-                                if (settings.DiscordSettings.UserStartPermissions[user.Id].Contains(container))
+                            settings.DiscordSettings.RoleStartPermissions.Add(role.Id, new List<string>());
+                        }
+                        switch (choice)
+                        {
+                            case "grant":
+                                if (settings.DiscordSettings.RoleStartPermissions[role.Id].Contains(container))
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            user.Nickname + 
+                                            role.Name + 
                                             " already has permission to start " + 
                                             container);
                                 }
                                 else
                                 {
-                                    settings.DiscordSettings.UserStartPermissions[user.Id].Add(container);
+                                    settings.DiscordSettings.RoleStartPermissions[role.Id].Add(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
                                             "Granted "+ 
-                                            user.Nickname + 
+                                            role.Name + 
                                             " permission to start " + 
                                             container);
                                 }
                                 break;
-                            case "stop":
-                                if (!settings.DiscordSettings.UserStopPermissions.ContainsKey(user.Id))
+                            case "revoke":
+                                if (settings.DiscordSettings.RoleStartPermissions[role.Id].Contains(container))
                                 {
-                                    settings.DiscordSettings.UserStopPermissions.Add(user.Id, new List<string>());
-                                }
-                                if (settings.DiscordSettings.UserStopPermissions[user.Id].Contains(container))
-                                {
+                                    settings.DiscordSettings.RoleStartPermissions[role.Id].Remove(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            user.Nickname + " already has permission to stop " + container);
+                                            "Revoked "+ 
+                                            role.Name + 
+                                            "'s permission to start " + 
+                                            container);
                                 }
                                 else
                                 {
-                                    settings.DiscordSettings.UserStopPermissions[user.Id].Add(container);
                                     await arg.ModifyOriginalResponseAsync(
-                                        edit => edit.Content ="Granted "+ 
-                                                              user.Nickname + " permission to stop " + container);
+                                        edit => edit.Content =
+                                            role.Name + 
+                                            "has no permission to start " + 
+                                            container);
                                 }
                                 break;
                         }
                         break;
-                    case "revoke":
+                    case "stop":
+                        if (!settings.DiscordSettings.RoleStopPermissions.ContainsKey(role.Id))
+                        {
+                            settings.DiscordSettings.RoleStopPermissions.Add(role.Id, new List<string>());
+                        }
+
                         switch (permission)
                         {
-                            case "start":
-                                if (!settings.DiscordSettings.UserStartPermissions.ContainsKey(user.Id))
-                                {
-                                    settings.DiscordSettings.UserStartPermissions.Add(user.Id, new List<string>());
-                                }
-                                if (settings.DiscordSettings.UserStartPermissions[user.Id].Contains(container))
-                                {
-                                    settings.DiscordSettings.UserStartPermissions[user.Id].Remove(container);
-                                    await arg.ModifyOriginalResponseAsync(
-                                        edit => edit.Content ="Revoked "+ 
-                                                              user.Nickname + "'s permission to start " + container);
-                                }
-                                else
+                            case "grant":
+                                if (settings.DiscordSettings.RoleStopPermissions[role.Id].Contains(container))
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                                              user.Nickname + "has no permission to start " + container);
+                                            role.Name + " already has permission to stop " + container);
+                                }
+                                else
+                                {
+                                    settings.DiscordSettings.RoleStopPermissions[role.Id].Add(container);
+                                    await arg.ModifyOriginalResponseAsync(
+                                        edit => edit.Content ="Granted "+ 
+                                                              role.Name + " permission to stop " + container);
                                 }
                                 break;
-                            case "stop":
-                                if (!settings.DiscordSettings.UserStopPermissions.ContainsKey(user.Id))
+                            case "revoke":
+                                if (settings.DiscordSettings.RoleStopPermissions[role.Id].Contains(container))
                                 {
-                                    settings.DiscordSettings.UserStopPermissions.Add(user.Id, new List<string>());
-                                }
-                                if (settings.DiscordSettings.UserStopPermissions[user.Id].Contains(container))
-                                {
-                                    settings.DiscordSettings.UserStopPermissions[user.Id].Remove(container);
+                                    settings.DiscordSettings.RoleStopPermissions[role.Id].Remove(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content ="Revoked "+ 
-                                                              user.Nickname + "'s permission to stop " + container);
+                                                              role.Name + "'s permission to stop " + container);
                                 }
                                 else
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            user.Nickname + "has no permission to stop " + container);
+                                            role.Name + "has no permission to stop " + container);
                                 }
                                 break;
                         }
                         break;
                 }
                 settingsService.WriteSettings(settings);
-                
             }
         }
 
         #endregion
+        
     }
 }
