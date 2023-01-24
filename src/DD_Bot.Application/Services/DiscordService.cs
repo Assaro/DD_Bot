@@ -51,13 +51,14 @@ namespace DD_Bot.Application.Services
         {
             _discordClient.Log += DiscordClient_Log;
             _discordClient.MessageReceived += DiscordClient_MessageReceived;
-            //_discordClient.GuildAvailable += DiscordClient_GuildAvailable;
+            _discordClient.GuildAvailable += DiscordClient_GuildAvailable;
             _discordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
             _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.DiscordSettings.Token);
             _discordClient.StartAsync();
-
             while (true)
+            {
                 Thread.Sleep(1000);
+            }
             // ReSharper disable once FunctionNeverReturns
         }
 
@@ -89,14 +90,18 @@ namespace DD_Bot.Application.Services
             return Task.CompletedTask;
         }
 
-        private async Task DiscordClient_GuildAvailable(SocketGuild arg)
+        private async Task DiscordClient_GuildAvailable(SocketGuild guild)
         {
-            await arg.CreateApplicationCommandAsync(TestCommand.Create());
-            await arg.CreateApplicationCommandAsync(DockerCommand.Create());
-            await arg.CreateApplicationCommandAsync(ListCommand.Create());
-            await arg.CreateApplicationCommandAsync(AdminCommand.Create());
-            await arg.CreateApplicationCommandAsync(UserCommand.Create());
-            await arg.CreateApplicationCommandAsync(RoleCommand.Create());
+            await Task.Run(() =>
+            {
+                guild.CreateApplicationCommandAsync(DockerCommand.Create());
+                guild.CreateApplicationCommandAsync(TestCommand.Create());
+                guild.CreateApplicationCommandAsync(ListCommand.Create());
+                guild.CreateApplicationCommandAsync(AdminCommand.Create());
+                guild.CreateApplicationCommandAsync(UserCommand.Create());
+                guild.CreateApplicationCommandAsync(RoleCommand.Create());
+            });
+            
         }
 
         private Task DiscordClient_MessageReceived(SocketMessage arg)

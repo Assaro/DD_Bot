@@ -18,6 +18,7 @@
 */
 
 
+using System;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
@@ -92,7 +93,7 @@ namespace DD_Bot.Application.Commands
                     new ApplicationCommandOptionChoiceProperties()
                     {
                         Name = "stop",
-                        Value = "revoke",
+                        Value = "stop",
                     }
                 });
 
@@ -117,7 +118,8 @@ namespace DD_Bot.Application.Commands
                 var role = arg.Data.Options.FirstOrDefault(option => option.Name == "role")?.Value as SocketRole;
                 var permission = arg.Data.Options.FirstOrDefault(option => option.Name == "permission")?.Value as string;
                 var container = arg.Data.Options.FirstOrDefault(option => option.Name == "container")?.Value as string;
-
+                Console.WriteLine(permission);
+                Console.WriteLine(choice);
                 switch (permission)
                 {
                     case "start":
@@ -175,11 +177,12 @@ namespace DD_Bot.Application.Commands
                             settings.DiscordSettings.RoleStopPermissions.Add(role.Id, new List<string>());
                         }
 
-                        switch (permission)
+                        switch (choice)
                         {
                             case "grant":
                                 if (settings.DiscordSettings.RoleStopPermissions[role.Id].Contains(container))
                                 {
+                                    Console.WriteLine("grant stop");
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
                                             role.Name + " already has permission to stop " + container);
