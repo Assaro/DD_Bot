@@ -89,18 +89,18 @@ namespace DD_Bot.Application.Commands
             
             int maxLength = dockerService.DockerStatusLongestName();
             maxLength++;
-            if (maxLength< 16)
+            if (maxLength< 15)
             {
-                maxLength = 16;
+                maxLength = 15;
             }
-            string outputHeader = new string('¯', 12 + maxLength)
+            string outputHeader = new string('¯', 13 + maxLength)
                             + "\n| Containername "
-                            + new string(' ', maxLength - 15)
+                            + new string(' ', maxLength - 14)
                             + "| Status  |\n"
-                            + new string('¯', 12 + maxLength)
+                            + new string('¯', 13 + maxLength)
                             + "\n";
             
-            string outputFooter = new string('¯', 12 + maxLength) + "\n" + "```";
+            string outputFooter = new string('¯', 13 + maxLength) + "\n" + "```";
             
             if (dockerService.DockerStatus.Count > dockerService.Settings.ContainersPerMessage)
             {
@@ -145,7 +145,7 @@ namespace DD_Bot.Application.Commands
             {
                 if (allowedContainers.Contains(item.Names[0]) || settings.AdminIDs.Contains(arg.User.Id))
                 {
-                    outputList = outputList + "|" + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
+                    outputList = outputList + "| " + item.Names[0] + new string(' ', maxLength - item.Names[0].Length);
                     if (item.Status.Contains("Up"))
                     {
                         outputList = outputList + "| Running |\n";
