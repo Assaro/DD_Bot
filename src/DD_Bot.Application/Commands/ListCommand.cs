@@ -89,13 +89,13 @@ namespace DD_Bot.Application.Commands
             
             int maxLength = dockerService.DockerStatusLongestName();
             maxLength++;
-            if (maxLength< 14)
+            if (maxLength< 16)
             {
-                maxLength = 14;
+                maxLength = 16;
             }
             string outputHeader = new string('¯', 12 + maxLength)
-                            + "\n|Containername"
-                            + new string(' ', maxLength - 13)
+                            + "\n| Containername "
+                            + new string(' ', maxLength - 15)
                             + "| Status  |\n"
                             + new string('¯', 12 + maxLength)
                             + "\n";

@@ -69,11 +69,9 @@ namespace DD_Bot.Application.Services
                 case "ping":
                     TestCommand.Execute(arg);
                     return Task.CompletedTask;
-
                 case "docker":
                         DockerCommand.Execute(arg, Docker, Setting.DiscordSettings);
                     return Task.CompletedTask;
-
                 case "list":
                     ListCommand.Execute(arg, Docker, Setting.DiscordSettings);
                     return Task.CompletedTask;
