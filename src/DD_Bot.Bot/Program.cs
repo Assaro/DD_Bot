@@ -27,6 +27,10 @@ using DD_Bot.Application.Services;
 using DD_Bot.Domain;
 using Newtonsoft.Json;
 
+string version = "0.1.0";
+
+Console.WriteLine("DD_Bot, Version "+ version);
+
 #region CreateSettingsFiles
 var settingsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "settings");
 //var languageDirectory = Path.Combine(settingsDirectory, "languages");
