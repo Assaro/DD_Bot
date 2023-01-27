@@ -84,6 +84,9 @@ namespace DD_Bot.Application.Services
                 case "role":
                     RoleCommand.Execute(arg, Setting, SettingService);
                     return Task.CompletedTask;
+                case "permission":
+                    PermissionCommand.Execute(arg, Setting);
+                    return Task.CompletedTask;
             }
             return Task.CompletedTask;
         }
@@ -98,6 +101,7 @@ namespace DD_Bot.Application.Services
                 guild.CreateApplicationCommandAsync(AdminCommand.Create());
                 guild.CreateApplicationCommandAsync(UserCommand.Create());
                 guild.CreateApplicationCommandAsync(RoleCommand.Create());
+                guild.CreateApplicationCommandAsync(PermissionCommand.Create());
             });
             
         }
