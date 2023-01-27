@@ -132,7 +132,7 @@ namespace DD_Bot.Application.Commands
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            user.Nickname + 
+                                            user.Username + 
                                             " already has permission to start " + 
                                             container);
                                 }
@@ -142,7 +142,7 @@ namespace DD_Bot.Application.Commands
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
                                             "Granted "+ 
-                                            user.Nickname + 
+                                            user.Username + 
                                             " permission to start " + 
                                             container);
                                 }
@@ -156,14 +156,14 @@ namespace DD_Bot.Application.Commands
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            user.Nickname + " already has permission to stop " + container);
+                                            user.Username + " already has permission to stop " + container);
                                 }
                                 else
                                 {
                                     settings.DiscordSettings.UserStopPermissions[user.Id].Add(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content ="Granted "+ 
-                                                              user.Nickname + " permission to stop " + container);
+                                                              user.Username + " permission to stop " + container);
                                 }
                                 break;
                         }
@@ -181,13 +181,13 @@ namespace DD_Bot.Application.Commands
                                     settings.DiscordSettings.UserStartPermissions[user.Id].Remove(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content ="Revoked "+ 
-                                                              user.Nickname + "'s permission to start " + container);
+                                                              user.Username + "'s permission to start " + container);
                                 }
                                 else
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                                              user.Nickname + "has no permission to start " + container);
+                                                              user.Username + "has no permission to start " + container);
                                 }
                                 break;
                             case "stop":
@@ -200,13 +200,13 @@ namespace DD_Bot.Application.Commands
                                     settings.DiscordSettings.UserStopPermissions[user.Id].Remove(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content ="Revoked "+ 
-                                                              user.Nickname + "'s permission to stop " + container);
+                                                              user.Username + "'s permission to stop " + container);
                                 }
                                 else
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            user.Nickname + "has no permission to stop " + container);
+                                            user.Username + "has no permission to stop " + container);
                                 }
                                 break;
                         }
