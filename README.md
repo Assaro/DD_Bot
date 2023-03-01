@@ -7,8 +7,8 @@
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/assaro/DD_Bot?color=brightgreen&style=for-the-badge">
 <img alt="GitHub" src="https://img.shields.io/github/license/assaro/dd_bot?style=for-the-badge"></p>
 
-`"Conveniently, the program itself can be used as a Docker Container"` - ***Gadget Gabe***
-**NEW: Now with commands to grant and revoke permissions** 
+`"Conveniently, the program itself can be used as a Docker Container"` - ***Gadget Gabe*** \
+**NEW: Now with commands to adjust permissions** 
 
 ## Screenshots
 
