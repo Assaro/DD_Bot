@@ -1,7 +1,6 @@
 <h1 align="center">DD_Bot</h1>
 
 <p align="center">A Discord-Bot to start and stop Docker Containers, using the Docker Socket</p>
-
 <p align="center">
 <a href="https://hub.docker.com/r/assaro/ddbot"><img alt="Docker Image Size (tag)" src="https://img.shields.io/docker/image-size/assaro/ddbot/latest?style=for-the-badge">
 <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/assaro/ddbot?style=for-the-badge"></a>
@@ -9,6 +8,7 @@
 <img alt="GitHub" src="https://img.shields.io/github/license/assaro/dd_bot?style=for-the-badge"></p>
 
 `"Conveniently, the program itself can be used as a Docker Container"` - ***Gadget Gabe***
+**NEW: Now with commands to grant and revoke permissions** 
 
 ## Screenshots
 
@@ -20,6 +20,7 @@
 ## Features
 
 - Remotely start and stop Docker Containers using Discord Slash Commands
+- Easily grant Users and Groups on your Discord access to selected containers
 - Enable Friends to start specified Containers, e.g. Gameservers
     - Save Energy when noone is playing
 - DD_Bot is designed to work on the same machine in its own Container
@@ -36,6 +37,8 @@
 
 ## [Settings](/sites/settings.md)
 
+## [Commands](/sites/commands.md)
+
 ## [FAQ/Troubleshooting](/sites/faq.md)
 
 ## To-Do List
@@ -46,9 +49,9 @@
 - [ ] Commands to grant and revoke privileges to users and groups
 - [ ] Fully customizable messages for Discord
 - [ ] More statistics
-- [ ] \(Maybe) Auto-Shutdown for certain containers
-- [ ] \(Maybe) more command options
-- [ ] \(Maybe) implement RCON to control gameservers
+- [ ] \(Maybe\) Auto-Shutdown for certain containers
+- [ ] \(Maybe\) more command options
+- [ ] \(Maybe\) implement RCON to control gameservers
 
 
 ### If you like my work, feel free to buy me a coffee
