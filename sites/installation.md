@@ -11,4 +11,4 @@
     - Everything but the Discord Token can now be changed with a command
 7. You should be good to go, if not, see [discordbot](/sites/discordbot.md), [settings](/sites/settings.md) or [faq](/sites/faq.md)
 8. If something is still not working, feel free to dm me or open an issue
-9. For information about the commands, click [here](sites/commands.md)
+9. For information about the commands, click [here](/sites/commands.md)
