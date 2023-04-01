@@ -4,4 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="3.9.0" />
+  </ItemGroup>
+
 </Project>

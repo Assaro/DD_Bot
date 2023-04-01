@@ -42,21 +42,23 @@ namespace DD_Bot.Application.Services
             _discordClient = new DiscordSocketClient();
         }
 
-        private DiscordSettings Setting => _configuration.Get<Settings>().DiscordSettings;
+        private Settings Setting => _configuration.Get<Settings>();
 
         private DockerService Docker => _serviceProvider.GetRequiredService<IDockerService>() as DockerService;
-
+        private SettingsService SettingService => _serviceProvider.GetRequiredService<ISettingsService>() as SettingsService;
+        
         public void Start() //Discord Start
         {
             _discordClient.Log += DiscordClient_Log;
             _discordClient.MessageReceived += DiscordClient_MessageReceived;
             _discordClient.GuildAvailable += DiscordClient_GuildAvailable;
             _discordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
-            _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.Token);
+            _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.DiscordSettings.Token);
             _discordClient.StartAsync();
-
             while (true)
+            {
                 Thread.Sleep(1000);
+            }
             // ReSharper disable once FunctionNeverReturns
         }
 
@@ -67,23 +69,41 @@ namespace DD_Bot.Application.Services
                 case "ping":
                     TestCommand.Execute(arg);
                     return Task.CompletedTask;
-
                 case "docker":
-                        DockerCommand.Execute(arg, Docker, Setting);
+                        DockerCommand.Execute(arg, Docker, Setting.DiscordSettings);
                     return Task.CompletedTask;
-
                 case "list":
-                    ListCommand.Execute(arg, Docker, Setting);
+                    ListCommand.Execute(arg, Docker, Setting.DiscordSettings);
+                    return Task.CompletedTask;
+                case "admin":
+                    AdminCommand.Execute(arg, Setting, SettingService);
+                    return Task.CompletedTask;
+                case "user":
+                    UserCommand.Execute(arg, Setting, SettingService);
+                    return Task.CompletedTask;
+                case "role":
+                    RoleCommand.Execute(arg, Setting, SettingService);
+                    return Task.CompletedTask;
+                case "permission":
+                    PermissionCommand.Execute(arg, Setting);
                     return Task.CompletedTask;
             }
             return Task.CompletedTask;
         }
 
-        private async Task DiscordClient_GuildAvailable(SocketGuild arg)
+        private async Task DiscordClient_GuildAvailable(SocketGuild guild)
         {
-            await arg.CreateApplicationCommandAsync(TestCommand.Create());
-            await arg.CreateApplicationCommandAsync(DockerCommand.Create());
-            await arg.CreateApplicationCommandAsync(ListCommand.Create());
+            await Task.Run(() =>
+            {
+                guild.CreateApplicationCommandAsync(DockerCommand.Create());
+                guild.CreateApplicationCommandAsync(TestCommand.Create());
+                guild.CreateApplicationCommandAsync(ListCommand.Create());
+                guild.CreateApplicationCommandAsync(AdminCommand.Create());
+                guild.CreateApplicationCommandAsync(UserCommand.Create());
+                guild.CreateApplicationCommandAsync(RoleCommand.Create());
+                guild.CreateApplicationCommandAsync(PermissionCommand.Create());
+            });
+            
         }
 
         private Task DiscordClient_MessageReceived(SocketMessage arg)
