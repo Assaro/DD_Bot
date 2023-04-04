@@ -24,5 +24,5 @@
 ### /role
 - used to grant/revoke permissions to a role
 
-### /role
-- used to grant/ revoke permissions to a single user
+### /user
+- used to grant/revoke permissions to a single user
