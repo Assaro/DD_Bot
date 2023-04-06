@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using DD_Bot.Application.Commands;
 using DD_Bot.Application.Interfaces;
 using DD_Bot.Domain;
+using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,9 +38,14 @@ namespace DD_Bot.Application.Services
 
         public DiscordService(IConfigurationRoot configuration, IServiceProvider serviceProvider)//Discord Initialising
         {
+            var discordSocketConfig = new DiscordSocketConfig
+            {
+                GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages
+            };
+
             _configuration = configuration;
             _serviceProvider = serviceProvider;
-            _discordClient = new DiscordSocketClient();
+            _discordClient = new DiscordSocketClient(discordSocketConfig);
         }
 
         private Settings Setting => _configuration.Get<Settings>();
@@ -49,11 +55,12 @@ namespace DD_Bot.Application.Services
         
         public void Start() //Discord Start
         {
+            
             _discordClient.Log += DiscordClient_Log;
             _discordClient.MessageReceived += DiscordClient_MessageReceived;
             _discordClient.GuildAvailable += DiscordClient_GuildAvailable;
             _discordClient.SlashCommandExecuted += DiscordClient_SlashCommandExecuted;
-            _discordClient.LoginAsync(Discord.TokenType.Bot, Setting.DiscordSettings.Token);
+            _discordClient.LoginAsync(TokenType.Bot, Setting.DiscordSettings.Token);
             _discordClient.StartAsync();
             while (true)
             {
@@ -112,7 +119,7 @@ namespace DD_Bot.Application.Services
             return Task.CompletedTask;
         }
 
-        private Task DiscordClient_Log(Discord.LogMessage arg)
+        private Task DiscordClient_Log(LogMessage arg)
         {
             Console.WriteLine($"{arg.Severity}:{arg.Message}");
             return Task.CompletedTask;
