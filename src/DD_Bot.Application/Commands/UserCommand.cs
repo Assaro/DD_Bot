@@ -121,6 +121,7 @@ namespace DD_Bot.Application.Commands
 
                 switch (choice)
                 {
+        #region GrantPermission
                     case "grant":
                         switch (permission)
                         {
@@ -133,19 +134,14 @@ namespace DD_Bot.Application.Commands
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            user.Username + 
-                                            " already has permission to start " + 
-                                            container);
+                                            user.Username + " already has permission to start " + container);
                                 }
                                 else
                                 {
                                     settings.DiscordSettings.UserStartPermissions[user.Id].Add(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            "Granted "+ 
-                                            user.Username + 
-                                            " permission to start " + 
-                                            container);
+                                            "Granted " + user.Username + " permission to start " + container);
                                 }
                                 break;
                             case "stop":
@@ -169,6 +165,9 @@ namespace DD_Bot.Application.Commands
                                 break;
                         }
                         break;
+        #endregion
+                    
+        #region RevokePermission
                     case "revoke":
                         switch (permission)
                         {
@@ -212,6 +211,7 @@ namespace DD_Bot.Application.Commands
                                 break;
                         }
                         break;
+        #endregion
                 }
                 settingsService.WriteSettings(settings);
                 

@@ -132,19 +132,14 @@ namespace DD_Bot.Application.Commands
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            role.Name + 
-                                            " already has permission to start " + 
-                                            container);
+                                            role.Name + " already has permission to start " + container);
                                 }
                                 else
                                 {
                                     settings.DiscordSettings.RoleStartPermissions[role.Id].Add(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            "Granted "+ 
-                                            role.Name + 
-                                            " permission to start " + 
-                                            container);
+                                            "Granted " + role.Name + " permission to start " + container);
                                 }
                                 break;
                             case "revoke":
@@ -153,18 +148,13 @@ namespace DD_Bot.Application.Commands
                                     settings.DiscordSettings.RoleStartPermissions[role.Id].Remove(container);
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            "Revoked "+ 
-                                            role.Name + 
-                                            "'s permission to start " + 
-                                            container);
+                                            "Revoked " + role.Name + "'s permission to start " + container);
                                 }
                                 else
                                 {
                                     await arg.ModifyOriginalResponseAsync(
                                         edit => edit.Content =
-                                            role.Name + 
-                                            "has no permission to start " + 
-                                            container);
+                                            role.Name + "has no permission to start " + container);
                                 }
                                 break;
                         }
@@ -189,8 +179,7 @@ namespace DD_Bot.Application.Commands
                                 {
                                     settings.DiscordSettings.RoleStopPermissions[role.Id].Add(container);
                                     await arg.ModifyOriginalResponseAsync(
-                                        edit => edit.Content ="Granted "+ 
-                                                              role.Name + " permission to stop " + container);
+                                        edit => edit.Content ="Granted " + role.Name + " permission to stop " + container);
                                 }
                                 break;
                             case "revoke":
@@ -198,8 +187,7 @@ namespace DD_Bot.Application.Commands
                                 {
                                     settings.DiscordSettings.RoleStopPermissions[role.Id].Remove(container);
                                     await arg.ModifyOriginalResponseAsync(
-                                        edit => edit.Content ="Revoked "+ 
-                                                              role.Name + "'s permission to stop " + container);
+                                        edit => edit.Content ="Revoked " + role.Name + "'s permission to stop " + container);
                                 }
                                 else
                                 {
