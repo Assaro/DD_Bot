@@ -149,7 +149,6 @@ namespace DD_Bot.Application.Commands
                                 }
                                 break;
                             case "stop":
-                                Console.WriteLine("grant revoke start");
                                 if (!settings.DiscordSettings.UserStopPermissions.ContainsKey(user.Id))
                                 {
                                     settings.DiscordSettings.UserStopPermissions.Add(user.Id, new List<string>());
