@@ -18,6 +18,7 @@
 */
 
 
+using System;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
@@ -93,7 +94,7 @@ namespace DD_Bot.Application.Commands
                     new ApplicationCommandOptionChoiceProperties()
                     {
                         Name = "stop",
-                        Value = "revoke",
+                        Value = "stop",
                     }
                 });
             return builder.Build();
@@ -117,7 +118,7 @@ namespace DD_Bot.Application.Commands
                 var user = arg.Data.Options.FirstOrDefault(option => option.Name == "user")?.Value as SocketGuildUser;
                 var permission = arg.Data.Options.FirstOrDefault(option => option.Name == "permission")?.Value as string;
                 var container = arg.Data.Options.FirstOrDefault(option => option.Name == "container")?.Value as string;
-                
+
                 switch (choice)
                 {
                     case "grant":
@@ -148,6 +149,7 @@ namespace DD_Bot.Application.Commands
                                 }
                                 break;
                             case "stop":
+                                Console.WriteLine("grant revoke start");
                                 if (!settings.DiscordSettings.UserStopPermissions.ContainsKey(user.Id))
                                 {
                                     settings.DiscordSettings.UserStopPermissions.Add(user.Id, new List<string>());
@@ -155,15 +157,15 @@ namespace DD_Bot.Application.Commands
                                 if (settings.DiscordSettings.UserStopPermissions[user.Id].Contains(container))
                                 {
                                     await arg.ModifyOriginalResponseAsync(
-                                        edit => edit.Content =
+                                        edit => edit.Content = 
                                             user.Username + " already has permission to stop " + container);
                                 }
                                 else
                                 {
                                     settings.DiscordSettings.UserStopPermissions[user.Id].Add(container);
                                     await arg.ModifyOriginalResponseAsync(
-                                        edit => edit.Content ="Granted "+ 
-                                                              user.Username + " permission to stop " + container);
+                                        edit => edit.Content =
+                                            "Granted "+ user.Username + " permission to stop " + container);
                                 }
                                 break;
                         }
