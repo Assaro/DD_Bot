@@ -118,8 +118,6 @@ namespace DD_Bot.Application.Commands
                 var role = arg.Data.Options.FirstOrDefault(option => option.Name == "role")?.Value as SocketRole;
                 var permission = arg.Data.Options.FirstOrDefault(option => option.Name == "permission")?.Value as string;
                 var container = arg.Data.Options.FirstOrDefault(option => option.Name == "container")?.Value as string;
-                Console.WriteLine(permission);
-                Console.WriteLine(choice);
                 switch (permission)
                 {
                     case "start":
