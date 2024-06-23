@@ -1,0 +1,8 @@
+name: dd-bot
+services:
+  ddbot:
+    container_name: DD_Bot
+    volumes:
+      - ./settings:/app/settings/:rw
+      - /var/run/docker.sock:/var/run/docker.sock
+    image: assaro/ddbot:latest
